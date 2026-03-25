@@ -12,14 +12,6 @@ import {
   MenuSubContent,
 } from '../components';
 
-// ─── Meta ────────────────────────────────────────────────
-
-const meta: Meta = {
-  title: 'Menu',
-};
-
-export default meta;
-
 // ─── Basic ───────────────────────────────────────────────
 
 const BasicStory = () => (
@@ -315,7 +307,13 @@ const PlaygroundStory = (args: {
   </div>
 );
 
-// ─── Exports ─────────────────────────────────────────────
+// ─── Meta & Exports ──────────────────────────────────────
+
+const meta: Meta = {
+  title: 'Menu/Menu',
+};
+
+export default meta;
 
 export const Basic: StoryObj = { name: 'Basic', render: () => <BasicStory /> };
 export const States: StoryObj = { name: 'States', render: () => <StatesStory /> };
@@ -325,7 +323,7 @@ export const NestedSubMenus: StoryObj = { name: 'Nested Sub-menus', render: () =
 export const AutoExpand: StoryObj = { name: 'Auto-expand (selected)', render: () => <AutoExpandStory /> };
 export const Dense: StoryObj = { name: 'Dense', render: () => <DenseStory /> };
 
-export const Playground: StoryObj = {
+export const Playground: StoryObj<typeof PlaygroundStory> = {
   name: 'Playground',
   argTypes: {
     dense: { control: 'boolean' },
@@ -349,5 +347,5 @@ export const Playground: StoryObj = {
     showSelected: true,
     showLabels: true,
   },
-  render: (args: any) => <PlaygroundStory {...args} />,
+  render: (args) => <PlaygroundStory {...args} />,
 };
