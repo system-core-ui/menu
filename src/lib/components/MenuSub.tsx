@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, createContext, useContext } from 'react';
+import { useState, useCallback, useMemo, useRef, createContext, useContext } from 'react';
 
 import type { MenuSubProps } from '../models';
 
@@ -22,7 +22,10 @@ export const useMenuSubContext = (): MenuSubContextValue => {
 /**
  * MenuSub — Inline collapsible sub-menu container.
  *
- * Click the trigger to expand/collapse the sub-content below it.
+ * - Click the trigger to toggle expand/collapse.
+ * - Hover to expand (with delay), leave to collapse (with delay).
+ *   The delay prevents accidental close when mouse moves between
+ *   trigger and content.
  *
  * @example
  * ```tsx
@@ -42,15 +45,43 @@ export const MenuSub = ({
   onOpenChange,
 }: MenuSubProps) => {
   const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen);
+  const hoverTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const isControlled = controlledOpen !== undefined;
   const isOpen = isControlled ? controlledOpen : uncontrolledOpen;
 
+  const setOpen = useCallback(
+    (nextOpen: boolean) => {
+      if (!isControlled) setUncontrolledOpen(nextOpen);
+      onOpenChange?.(nextOpen);
+    },
+    [isControlled, onOpenChange],
+  );
+
   const toggle = useCallback(() => {
-    const nextOpen = !isOpen;
-    if (!isControlled) setUncontrolledOpen(nextOpen);
-    onOpenChange?.(nextOpen);
-  }, [isOpen, isControlled, onOpenChange]);
+    setOpen(!isOpen);
+  }, [isOpen, setOpen]);
+
+  // Hover handlers with delay to prevent flicker
+  const handleMouseEnter = useCallback(() => {
+    if (hoverTimerRef.current) {
+      clearTimeout(hoverTimerRef.current);
+      hoverTimerRef.current = null;
+    }
+    if (!isOpen) {
+      hoverTimerRef.current = setTimeout(() => setOpen(true), 150);
+    }
+  }, [isOpen, setOpen]);
+
+  const handleMouseLeave = useCallback(() => {
+    if (hoverTimerRef.current) {
+      clearTimeout(hoverTimerRef.current);
+      hoverTimerRef.current = null;
+    }
+    if (isOpen) {
+      hoverTimerRef.current = setTimeout(() => setOpen(false), 300);
+    }
+  }, [isOpen, setOpen]);
 
   const contextValue = useMemo<MenuSubContextValue>(
     () => ({ isOpen, toggle }),
@@ -59,7 +90,12 @@ export const MenuSub = ({
 
   return (
     <MenuSubContext.Provider value={contextValue}>
-      {children}
+      <div
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
+        {children}
+      </div>
     </MenuSubContext.Provider>
   );
 };
