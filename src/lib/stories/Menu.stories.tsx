@@ -82,7 +82,7 @@ const WithSubMenusStory = () => {
           🏠 Dashboard
         </MenuItem>
 
-        <MenuSub defaultOpen>
+        <MenuSub>
           <MenuSubTrigger>📊 Analytics</MenuSubTrigger>
           <MenuSubContent>
             <MenuItem
@@ -164,6 +164,81 @@ const NestedSubMenusStory = () => (
     </Menu>
   </div>
 );
+
+// ─── Auto-expand (selected child expands parents) ────────
+
+const AutoExpandStory = () => {
+  const [selected, setSelected] = useState('backend');
+
+  return (
+    <div style={{ padding: 32 }}>
+      <div style={{ fontSize: 13, color: '#888', marginBottom: 16 }}>
+        Click any item — parent subs auto-expand to reveal the active item.
+      </div>
+      <Menu style={{ width: 260 }}>
+        <MenuItem
+          selected={selected === 'home'}
+          onClick={() => setSelected('home')}
+        >
+          🏠 Home
+        </MenuItem>
+
+        <MenuSub>
+          <MenuSubTrigger>📁 Projects</MenuSubTrigger>
+          <MenuSubContent>
+            <MenuItem
+              selected={selected === 'all'}
+              onClick={() => setSelected('all')}
+            >
+              All Projects
+            </MenuItem>
+            <MenuSub>
+              <MenuSubTrigger>By Team</MenuSubTrigger>
+              <MenuSubContent>
+                <MenuItem
+                  selected={selected === 'frontend'}
+                  onClick={() => setSelected('frontend')}
+                >
+                  Frontend
+                </MenuItem>
+                <MenuItem
+                  selected={selected === 'backend'}
+                  onClick={() => setSelected('backend')}
+                >
+                  Backend
+                </MenuItem>
+                <MenuItem
+                  selected={selected === 'devops'}
+                  onClick={() => setSelected('devops')}
+                >
+                  DevOps
+                </MenuItem>
+              </MenuSubContent>
+            </MenuSub>
+          </MenuSubContent>
+        </MenuSub>
+
+        <MenuSub>
+          <MenuSubTrigger>⚙ Settings</MenuSubTrigger>
+          <MenuSubContent>
+            <MenuItem
+              selected={selected === 'general'}
+              onClick={() => setSelected('general')}
+            >
+              General
+            </MenuItem>
+            <MenuItem
+              selected={selected === 'security'}
+              onClick={() => setSelected('security')}
+            >
+              Security
+            </MenuItem>
+          </MenuSubContent>
+        </MenuSub>
+      </Menu>
+    </div>
+  );
+};
 
 // ─── Dense ───────────────────────────────────────────────
 
@@ -247,6 +322,7 @@ export const States: StoryObj = { name: 'States', render: () => <StatesStory /> 
 export const Grouped: StoryObj = { name: 'Grouped', render: () => <GroupedStory /> };
 export const WithSubMenus: StoryObj = { name: 'Sub-menus (hover)', render: () => <WithSubMenusStory /> };
 export const NestedSubMenus: StoryObj = { name: 'Nested Sub-menus', render: () => <NestedSubMenusStory /> };
+export const AutoExpand: StoryObj = { name: 'Auto-expand (selected)', render: () => <AutoExpandStory /> };
 export const Dense: StoryObj = { name: 'Dense', render: () => <DenseStory /> };
 
 export const Playground: StoryObj = {

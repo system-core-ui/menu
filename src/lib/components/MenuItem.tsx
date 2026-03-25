@@ -1,7 +1,8 @@
-import { forwardRef, useCallback } from 'react';
+import { forwardRef, useCallback, useEffect } from 'react';
 
 import type { MenuItemProps } from '../models';
 import { useMenuContext } from '../hooks/useMenuContext';
+import { useOptionalMenuSubContext } from './MenuSub';
 import {
   MenuItemStyled,
   MenuItemIconStyled,
@@ -13,7 +14,8 @@ import {
 /**
  * MenuItem — Clickable action/navigation item inside a Menu.
  *
- * Supports icon, shortcut text, danger/selected/disabled variants.
+ * When `selected={true}` and inside a `MenuSub`, automatically signals
+ * the parent sub-menu (and all ancestors) to expand.
  */
 export const MenuItem = forwardRef<HTMLDivElement, MenuItemProps>(
   (
@@ -30,6 +32,14 @@ export const MenuItem = forwardRef<HTMLDivElement, MenuItemProps>(
     ref,
   ) => {
     const { dense } = useMenuContext();
+    const subContext = useOptionalMenuSubContext();
+
+    // Auto-expand parent MenuSub when this item is selected
+    useEffect(() => {
+      if (selected && subContext) {
+        subContext.reportSelected();
+      }
+    }, [selected, subContext]);
 
     const handleClick = useCallback(() => {
       if (disabled) return;
