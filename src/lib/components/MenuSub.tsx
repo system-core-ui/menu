@@ -1,25 +1,42 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo, createContext, useContext } from 'react';
 
 import type { MenuSubProps } from '../models';
 
+/* ─── Sub-menu context ────────────────────────────────────── */
+
+interface MenuSubContextValue {
+  isOpen: boolean;
+  toggle: () => void;
+}
+
+const MenuSubContext = createContext<MenuSubContextValue | null>(null);
+
+export const useMenuSubContext = (): MenuSubContextValue => {
+  const context = useContext(MenuSubContext);
+  if (!context) {
+    throw new Error('MenuSubTrigger/MenuSubContent must be used within <MenuSub>');
+  }
+  return context;
+};
+
 /**
- * MenuSub — Container for a sub-menu (popover or inline mode).
+ * MenuSub — Inline collapsible sub-menu container.
  *
- * Provides open/close state for sub-menu content.
+ * Click the trigger to expand/collapse the sub-content below it.
  *
  * @example
  * ```tsx
- * <MenuSub mode="inline">
- *   <MenuSubTrigger icon={<Icon />}>Analytics</MenuSubTrigger>
+ * <MenuSub>
+ *   <MenuSubTrigger icon={<SettingsIcon />}>Settings</MenuSubTrigger>
  *   <MenuSubContent>
- *     <MenuItem>Overview</MenuItem>
+ *     <MenuItem>General</MenuItem>
+ *     <MenuItem>Security</MenuItem>
  *   </MenuSubContent>
  * </MenuSub>
  * ```
  */
 export const MenuSub = ({
   children,
-  mode: _mode = 'popover',
   open: controlledOpen,
   defaultOpen = false,
   onOpenChange,
@@ -27,18 +44,24 @@ export const MenuSub = ({
   const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen);
 
   const isControlled = controlledOpen !== undefined;
-  const _isOpen = isControlled ? controlledOpen : uncontrolledOpen;
+  const isOpen = isControlled ? controlledOpen : uncontrolledOpen;
 
-  const _setOpen = useCallback(
-    (nextOpen: boolean) => {
-      if (!isControlled) setUncontrolledOpen(nextOpen);
-      onOpenChange?.(nextOpen);
-    },
-    [isControlled, onOpenChange],
+  const toggle = useCallback(() => {
+    const nextOpen = !isOpen;
+    if (!isControlled) setUncontrolledOpen(nextOpen);
+    onOpenChange?.(nextOpen);
+  }, [isOpen, isControlled, onOpenChange]);
+
+  const contextValue = useMemo<MenuSubContextValue>(
+    () => ({ isOpen, toggle }),
+    [isOpen, toggle],
   );
 
-  // TODO: provide sub-menu context to children
-  return <>{children}</>;
+  return (
+    <MenuSubContext.Provider value={contextValue}>
+      {children}
+    </MenuSubContext.Provider>
+  );
 };
 
 MenuSub.displayName = 'MenuSub';

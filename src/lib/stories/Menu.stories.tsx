@@ -2,12 +2,13 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 
 import {
   Menu,
-  MenuTrigger,
-  MenuContent,
   MenuItem,
   MenuLabel,
   MenuDivider,
   MenuGroup,
+  MenuSub,
+  MenuSubTrigger,
+  MenuSubContent,
 } from '../components';
 
 const meta: Meta = {
@@ -22,39 +23,30 @@ export default meta;
 type Story = StoryObj;
 
 /**
- * Basic menu with simple action items.
+ * Basic persistent menu list.
  */
 export const Basic: Story = {
   render: () => (
-    <Menu>
-      <MenuTrigger>
-        <button>Open Menu</button>
-      </MenuTrigger>
-      <MenuContent>
-        <MenuItem onClick={() => console.log('Cut')}>Cut</MenuItem>
-        <MenuItem onClick={() => console.log('Copy')}>Copy</MenuItem>
-        <MenuItem onClick={() => console.log('Paste')}>Paste</MenuItem>
-      </MenuContent>
+    <Menu style={{ width: 240 }}>
+      <MenuItem onClick={() => console.log('Home')}>Home</MenuItem>
+      <MenuItem onClick={() => console.log('Profile')}>Profile</MenuItem>
+      <MenuItem onClick={() => console.log('Settings')}>Settings</MenuItem>
     </Menu>
   ),
 };
 
 /**
- * Menu with icons and keyboard shortcuts.
+ * Menu with selected and disabled items.
  */
-export const WithIcons: Story = {
+export const States: Story = {
   render: () => (
-    <Menu>
-      <MenuTrigger>
-        <button>Edit</button>
-      </MenuTrigger>
-      <MenuContent>
-        <MenuItem shortcut="⌘X">Cut</MenuItem>
-        <MenuItem shortcut="⌘C">Copy</MenuItem>
-        <MenuItem shortcut="⌘V">Paste</MenuItem>
-        <MenuDivider />
-        <MenuItem danger>Delete</MenuItem>
-      </MenuContent>
+    <Menu style={{ width: 240 }}>
+      <MenuItem>Home</MenuItem>
+      <MenuItem selected>Users</MenuItem>
+      <MenuItem>Analytics</MenuItem>
+      <MenuDivider />
+      <MenuItem disabled>Admin (restricted)</MenuItem>
+      <MenuItem danger>Logout</MenuItem>
     </Menu>
   ),
 };
@@ -64,62 +56,71 @@ export const WithIcons: Story = {
  */
 export const Grouped: Story = {
   render: () => (
-    <Menu>
-      <MenuTrigger>
-        <button>Format</button>
-      </MenuTrigger>
-      <MenuContent>
-        <MenuGroup label="Text">
-          <MenuItem>Single</MenuItem>
-          <MenuItem>1.15</MenuItem>
-          <MenuItem>Double</MenuItem>
-        </MenuGroup>
-        <MenuDivider />
-        <MenuGroup label="Spacing">
-          <MenuItem>Add space before paragraph</MenuItem>
-          <MenuItem>Add space after paragraph</MenuItem>
-        </MenuGroup>
-      </MenuContent>
+    <Menu style={{ width: 240 }}>
+      <MenuGroup label="Navigation">
+        <MenuItem>Dashboard</MenuItem>
+        <MenuItem selected>Users</MenuItem>
+        <MenuItem>Analytics</MenuItem>
+      </MenuGroup>
+      <MenuDivider />
+      <MenuGroup label="Account">
+        <MenuItem>Profile</MenuItem>
+        <MenuItem>Settings</MenuItem>
+        <MenuItem danger>Logout</MenuItem>
+      </MenuGroup>
     </Menu>
   ),
 };
 
 /**
- * Menu with disabled and selected items.
+ * Menu with inline collapsible sub-menus (sidebar-style).
  */
-export const States: Story = {
+export const WithSubMenus: Story = {
   render: () => (
-    <Menu>
-      <MenuTrigger>
-        <button>View</button>
-      </MenuTrigger>
-      <MenuContent>
-        <MenuItem selected>Compact</MenuItem>
-        <MenuItem>Comfortable</MenuItem>
-        <MenuItem>Cozy</MenuItem>
-        <MenuDivider />
-        <MenuItem disabled>Custom (Pro only)</MenuItem>
-      </MenuContent>
+    <Menu style={{ width: 260 }}>
+      <MenuItem>🏠 Dashboard</MenuItem>
+
+      <MenuSub defaultOpen>
+        <MenuSubTrigger>📊 Analytics</MenuSubTrigger>
+        <MenuSubContent>
+          <MenuItem>Overview</MenuItem>
+          <MenuItem selected>Reports</MenuItem>
+          <MenuItem>Exports</MenuItem>
+        </MenuSubContent>
+      </MenuSub>
+
+      <MenuSub>
+        <MenuSubTrigger>⚙ Settings</MenuSubTrigger>
+        <MenuSubContent>
+          <MenuItem>General</MenuItem>
+          <MenuItem>Security</MenuItem>
+          <MenuItem>Notifications</MenuItem>
+        </MenuSubContent>
+      </MenuSub>
+
+      <MenuDivider />
+      <MenuItem danger>🚪 Logout</MenuItem>
     </Menu>
   ),
 };
 
 /**
- * Dense menu with smaller padding.
+ * Dense mode — smaller padding and text.
  */
 export const Dense: Story = {
   render: () => (
-    <Menu>
-      <MenuTrigger>
-        <button>Dense Menu</button>
-      </MenuTrigger>
-      <MenuContent dense>
-        <MenuItem>Option 1</MenuItem>
-        <MenuItem>Option 2</MenuItem>
-        <MenuItem>Option 3</MenuItem>
-        <MenuItem>Option 4</MenuItem>
-        <MenuItem>Option 5</MenuItem>
-      </MenuContent>
+    <Menu dense style={{ width: 220 }}>
+      <MenuItem>Home</MenuItem>
+      <MenuItem selected>Users</MenuItem>
+      <MenuItem>Analytics</MenuItem>
+      <MenuDivider />
+      <MenuSub>
+        <MenuSubTrigger>Settings</MenuSubTrigger>
+        <MenuSubContent>
+          <MenuItem>General</MenuItem>
+          <MenuItem>Security</MenuItem>
+        </MenuSubContent>
+      </MenuSub>
     </Menu>
   ),
 };

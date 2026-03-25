@@ -1,7 +1,5 @@
 export {
   Menu,
-  MenuTrigger,
-  MenuContent,
   MenuItem,
   MenuLabel,
   MenuDivider,
@@ -13,8 +11,6 @@ export {
 
 export type {
   MenuProps,
-  MenuTriggerProps,
-  MenuContentProps,
   MenuItemProps,
   MenuLabelProps,
   MenuDividerProps,
@@ -22,5 +18,4 @@ export type {
   MenuSubProps,
   MenuSubTriggerProps,
   MenuSubContentProps,
-  MenuSubMode,
 } from './lib/models';

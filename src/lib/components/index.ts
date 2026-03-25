@@ -1,6 +1,4 @@
 export { Menu } from './Menu';
-export { MenuTrigger } from './MenuTrigger';
-export { MenuContent } from './MenuContent';
 export { MenuItem } from './MenuItem';
 export { MenuLabel } from './MenuLabel';
 export { MenuDivider } from './MenuDivider';

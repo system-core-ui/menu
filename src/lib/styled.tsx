@@ -2,42 +2,16 @@ import { type CSSObject, useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 import type { ThemeSchema } from '@thanh-libs/theme';
 
-/* ─── MenuContent ─────────────────────────────────────────── */
+/* ─── Menu Container ──────────────────────────────────────── */
 
-interface MenuContentStyledProps {
-  ownerDense: boolean;
-  ownerMaxHeight: string;
-  ownerMinWidth: string;
-}
-
-export const MenuContentStyled = styled.div<MenuContentStyledProps>(
-  ({ ownerDense, ownerMaxHeight, ownerMinWidth }): CSSObject => {
-    const { palette, spacing, shadows, shape }: ThemeSchema = useTheme();
+export const MenuContainerStyled = styled.div(
+  (): CSSObject => {
+    const { palette }: ThemeSchema = useTheme();
 
     return {
       display: 'flex',
       flexDirection: 'column',
-      backgroundColor: palette?.background?.paper ?? '#fff',
-      borderRadius: shape?.borderRadius ?? '0.5rem',
-      boxShadow:
-        shadows?.[8] ??
-        '0px 5px 5px -3px rgba(0,0,0,0.2), 0px 8px 10px 1px rgba(0,0,0,0.14), 0px 3px 14px 2px rgba(0,0,0,0.12)',
-      padding: ownerDense
-        ? (spacing?.tiny ?? '0.25rem') + ' 0'
-        : (spacing?.small ?? '0.5rem') + ' 0',
-      minWidth: ownerMinWidth,
-      maxHeight: ownerMaxHeight,
-      overflowY: 'auto',
-      outline: 'none',
-
-      // Scrollbar styling
-      '&::-webkit-scrollbar': {
-        width: 6,
-      },
-      '&::-webkit-scrollbar-thumb': {
-        backgroundColor: palette?.action?.hover ?? 'rgba(0,0,0,0.1)',
-        borderRadius: 3,
-      },
+      color: palette?.text?.primary ?? 'rgba(0,0,0,0.87)',
     };
   },
 );
@@ -75,10 +49,11 @@ export const MenuItemStyled = styled.div<MenuItemStyledProps>(
       userSelect: 'none',
       position: 'relative',
       outline: 'none',
+      borderRadius: '0.375rem',
       transition: 'background-color 150ms',
 
       ...(!ownerDisabled && {
-        '&:hover, &[data-highlighted]': {
+        '&:hover': {
           backgroundColor: ownerDanger
             ? (palette?.error?.light ?? 'rgba(211,47,47,0.08)')
             : (palette?.action?.hover ?? 'rgba(0,0,0,0.04)'),
@@ -91,6 +66,7 @@ export const MenuItemStyled = styled.div<MenuItemStyledProps>(
       }),
 
       ...(ownerSelected && {
+        backgroundColor: palette?.action?.selected ?? 'rgba(25,118,210,0.08)',
         fontWeight: 600,
       }),
     };
@@ -99,26 +75,19 @@ export const MenuItemStyled = styled.div<MenuItemStyledProps>(
 
 /* ─── MenuItem layout helpers ─────────────────────────────── */
 
-export const MenuItemIconStyled = styled.span(
-  (): CSSObject => {
-    const { palette }: ThemeSchema = useTheme();
-
-    return {
-      display: 'inline-flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      flexShrink: 0,
-      width: 20,
-      height: 20,
-      color: 'inherit',
-      '& > svg': {
-        width: '100%',
-        height: '100%',
-        fill: 'currentColor',
-      },
-    };
+export const MenuItemIconStyled = styled.span({
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  flexShrink: 0,
+  width: 20,
+  height: 20,
+  '& > svg': {
+    width: '100%',
+    height: '100%',
+    fill: 'currentColor',
   },
-);
+});
 
 export const MenuItemLabelStyled = styled.span({
   flex: 1,
@@ -179,7 +148,7 @@ export const MenuDividerStyled = styled.hr(
   },
 );
 
-/* ─── MenuSubTrigger arrow ────────────────────────────────── */
+/* ─── SubTrigger arrow indicator ──────────────────────────── */
 
 export const SubArrowStyled = styled.span(
   (): CSSObject => {
@@ -195,7 +164,7 @@ export const SubArrowStyled = styled.span(
   },
 );
 
-/* ─── Inline SubContent collapse ──────────────────────────── */
+/* ─── Inline SubContent (collapse/expand) ─────────────────── */
 
 interface InlineSubContentStyledProps {
   ownerOpen: boolean;

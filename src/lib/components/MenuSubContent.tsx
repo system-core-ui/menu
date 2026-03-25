@@ -1,27 +1,27 @@
 import { forwardRef } from 'react';
 
 import type { MenuSubContentProps } from '../models';
+import { useMenuSubContext } from './MenuSub';
+import { InlineSubContentStyled } from '../styled';
 
 /**
- * MenuSubContent — Content panel for sub-menu items.
+ * MenuSubContent — Inline collapsible content for sub-menu items.
  *
- * Renders as floating popover or inline collapse depending on parent MenuSub mode.
+ * Slides down/up with animation when parent MenuSub is toggled.
  */
 export const MenuSubContent = forwardRef<HTMLDivElement, MenuSubContentProps>(
-  (
-    {
-      children,
-      placement: _placement = 'right-start',
-      offset: _offset = 0,
-      ...rest
-    },
-    ref,
-  ) => {
-    // TODO: implement popover vs inline rendering based on MenuSub mode context
+  ({ children, ...rest }, ref) => {
+    const { isOpen } = useMenuSubContext();
+
     return (
-      <div ref={ref} role="menu" {...rest}>
+      <InlineSubContentStyled
+        ref={ref}
+        role="menu"
+        ownerOpen={isOpen}
+        {...rest}
+      >
         {children}
-      </div>
+      </InlineSubContentStyled>
     );
   },
 );

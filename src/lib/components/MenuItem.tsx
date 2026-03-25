@@ -11,10 +11,9 @@ import {
 } from '../styled';
 
 /**
- * MenuItem — Clickable action item inside a Menu.
+ * MenuItem — Clickable action/navigation item inside a Menu.
  *
- * Supports icon, shortcut text, danger/selected variants, and
- * auto-closes the menu on click by default.
+ * Supports icon, shortcut text, danger/selected/disabled variants.
  */
 export const MenuItem = forwardRef<HTMLDivElement, MenuItemProps>(
   (
@@ -26,18 +25,16 @@ export const MenuItem = forwardRef<HTMLDivElement, MenuItemProps>(
       danger = false,
       selected = false,
       onClick,
-      closeOnClick = true,
       ...rest
     },
     ref,
   ) => {
-    const { close, dense } = useMenuContext();
+    const { dense } = useMenuContext();
 
     const handleClick = useCallback(() => {
       if (disabled) return;
       onClick?.();
-      if (closeOnClick) close();
-    }, [disabled, onClick, closeOnClick, close]);
+    }, [disabled, onClick]);
 
     const handleKeyDown = useCallback(
       (e: React.KeyboardEvent) => {
