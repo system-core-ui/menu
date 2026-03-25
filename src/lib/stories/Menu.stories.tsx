@@ -15,7 +15,7 @@ import {
 // ─── Meta ────────────────────────────────────────────────
 
 const meta: Meta = {
-  title: 'Components/Menu',
+  title: 'Menu/Menu',
 };
 
 export default meta;
