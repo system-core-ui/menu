@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, createContext, useContext } from 'react';
+import { useState, useCallback, useMemo, useRef, createContext, useContext } from 'react';
 
 import type { MenuSubProps } from '../models';
 
@@ -9,8 +9,8 @@ interface MenuSubContextValue {
   toggle: () => void;
   /** True when any descendant MenuItem has selected={true} */
   hasSelectedChild: boolean;
-  /** Called by child MenuItem when selected={true} to auto-expand this sub */
-  reportSelected: () => void;
+  /** Called by child MenuItem to register/unregister selected state */
+  registerSelected: () => () => void;
 }
 
 const MenuSubContext = createContext<MenuSubContextValue | null>(null);
@@ -25,7 +25,6 @@ export const useMenuSubContext = (): MenuSubContextValue => {
 
 /**
  * Try to get MenuSub context — returns null if not inside a MenuSub.
- * Used by MenuItem to optionally report selected state.
  */
 export const useOptionalMenuSubContext = (): MenuSubContextValue | null => {
   return useContext(MenuSubContext);
@@ -34,20 +33,10 @@ export const useOptionalMenuSubContext = (): MenuSubContextValue | null => {
 /**
  * MenuSub — Inline collapsible sub-menu container.
  *
- * - Click the trigger to toggle expand/collapse.
+ * - Click to toggle expand/collapse
  * - **Auto-expand** when any child MenuItem has `selected={true}`
  * - **Soft-select** on trigger when a descendant is selected
- *
- * @example
- * ```tsx
- * <MenuSub>
- *   <MenuSubTrigger icon={<SettingsIcon />}>Settings</MenuSubTrigger>
- *   <MenuSubContent>
- *     <MenuItem selected>General</MenuItem>
- *     <MenuItem>Security</MenuItem>
- *   </MenuSubContent>
- * </MenuSub>
- * ```
+ * - Clears soft-select when no descendants are selected
  */
 export const MenuSub = ({
   children,
@@ -56,11 +45,12 @@ export const MenuSub = ({
   onOpenChange,
 }: MenuSubProps) => {
   const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen);
-  const [hasSelectedChild, setHasSelectedChild] = useState(false);
-  const hasAutoExpandedRef = { current: false };
+  const [selectedCount, setSelectedCount] = useState(0);
+  const hasAutoExpandedRef = useRef(false);
 
   const isControlled = controlledOpen !== undefined;
   const isOpen = isControlled ? controlledOpen : uncontrolledOpen;
+  const hasSelectedChild = selectedCount > 0;
 
   const setOpen = useCallback(
     (nextOpen: boolean) => {
@@ -76,23 +66,45 @@ export const MenuSub = ({
 
   // Bubble up to parent MenuSub
   const parentSub = useContext(MenuSubContext);
+  const parentUnregisterRef = useRef<(() => void) | null>(null);
 
-  const reportSelected = useCallback(() => {
-    setHasSelectedChild(true);
+  const registerSelected = useCallback(() => {
+    setSelectedCount((c) => {
+      const next = c + 1;
 
-    // Auto-expand this sub only once
-    if (!hasAutoExpandedRef.current) {
-      hasAutoExpandedRef.current = true;
-      setOpen(true);
-    }
+      // Auto-expand on first selected child
+      if (next === 1 && !hasAutoExpandedRef.current) {
+        hasAutoExpandedRef.current = true;
+        setOpen(true);
+      }
 
-    // Bubble up
-    parentSub?.reportSelected();
+      // Bubble up: register with parent too
+      if (next === 1 && parentSub) {
+        parentUnregisterRef.current = parentSub.registerSelected();
+      }
+
+      return next;
+    });
+
+    // Return unregister function
+    return () => {
+      setSelectedCount((c) => {
+        const next = c - 1;
+
+        // Unregister from parent when no more selected children
+        if (next === 0 && parentUnregisterRef.current) {
+          parentUnregisterRef.current();
+          parentUnregisterRef.current = null;
+        }
+
+        return next;
+      });
+    };
   }, [setOpen, parentSub]);
 
   const contextValue = useMemo<MenuSubContextValue>(
-    () => ({ isOpen, toggle, hasSelectedChild, reportSelected }),
-    [isOpen, toggle, hasSelectedChild, reportSelected],
+    () => ({ isOpen, toggle, hasSelectedChild, registerSelected }),
+    [isOpen, toggle, hasSelectedChild, registerSelected],
   );
 
   return (

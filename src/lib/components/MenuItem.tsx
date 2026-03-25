@@ -34,11 +34,12 @@ export const MenuItem = forwardRef<HTMLDivElement, MenuItemProps>(
     const { dense } = useMenuContext();
     const subContext = useOptionalMenuSubContext();
 
-    // Auto-expand parent MenuSub when this item is selected
+    // Register/unregister selected state with parent MenuSub
     useEffect(() => {
       if (selected && subContext) {
-        subContext.reportSelected();
+        return subContext.registerSelected();
       }
+      return undefined;
     }, [selected, subContext]);
 
     const handleClick = useCallback(() => {
