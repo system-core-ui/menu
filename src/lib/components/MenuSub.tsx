@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, useRef, createContext, useContext } from 'react';
+import { useState, useCallback, useMemo, createContext, useContext } from 'react';
 
 import type { MenuSubProps } from '../models';
 
@@ -7,6 +7,8 @@ import type { MenuSubProps } from '../models';
 interface MenuSubContextValue {
   isOpen: boolean;
   toggle: () => void;
+  /** True when any descendant MenuItem has selected={true} */
+  hasSelectedChild: boolean;
   /** Called by child MenuItem when selected={true} to auto-expand this sub */
   reportSelected: () => void;
 }
@@ -32,16 +34,16 @@ export const useOptionalMenuSubContext = (): MenuSubContextValue | null => {
 /**
  * MenuSub — Inline collapsible sub-menu container.
  *
- * - Click to toggle expand/collapse
- * - Hover to expand (with delay)
+ * - Click the trigger to toggle expand/collapse.
  * - **Auto-expand** when any child MenuItem has `selected={true}`
+ * - **Soft-select** on trigger when a descendant is selected
  *
  * @example
  * ```tsx
  * <MenuSub>
  *   <MenuSubTrigger icon={<SettingsIcon />}>Settings</MenuSubTrigger>
  *   <MenuSubContent>
- *     <MenuItem selected>General</MenuItem>  // ← auto-expands parent
+ *     <MenuItem selected>General</MenuItem>
  *     <MenuItem>Security</MenuItem>
  *   </MenuSubContent>
  * </MenuSub>
@@ -54,8 +56,8 @@ export const MenuSub = ({
   onOpenChange,
 }: MenuSubProps) => {
   const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen);
-  const hoverTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const hasAutoExpandedRef = useRef(false);
+  const [hasSelectedChild, setHasSelectedChild] = useState(false);
+  const hasAutoExpandedRef = { current: false };
 
   const isControlled = controlledOpen !== undefined;
   const isOpen = isControlled ? controlledOpen : uncontrolledOpen;
@@ -72,53 +74,30 @@ export const MenuSub = ({
     setOpen(!isOpen);
   }, [isOpen, setOpen]);
 
-  // If a child has selected={true}, also report to parent MenuSub (bubble up)
+  // Bubble up to parent MenuSub
   const parentSub = useContext(MenuSubContext);
 
   const reportSelected = useCallback(() => {
-    // Auto-expand this sub only once (on mount)
+    setHasSelectedChild(true);
+
+    // Auto-expand this sub only once
     if (!hasAutoExpandedRef.current) {
       hasAutoExpandedRef.current = true;
       setOpen(true);
     }
-    // Bubble up: tell parent sub to expand too
+
+    // Bubble up
     parentSub?.reportSelected();
   }, [setOpen, parentSub]);
 
-  // Hover handlers with delay
-  const handleMouseEnter = useCallback(() => {
-    if (hoverTimerRef.current) {
-      clearTimeout(hoverTimerRef.current);
-      hoverTimerRef.current = null;
-    }
-    if (!isOpen) {
-      hoverTimerRef.current = setTimeout(() => setOpen(true), 150);
-    }
-  }, [isOpen, setOpen]);
-
-  const handleMouseLeave = useCallback(() => {
-    if (hoverTimerRef.current) {
-      clearTimeout(hoverTimerRef.current);
-      hoverTimerRef.current = null;
-    }
-    if (isOpen) {
-      hoverTimerRef.current = setTimeout(() => setOpen(false), 300);
-    }
-  }, [isOpen, setOpen]);
-
   const contextValue = useMemo<MenuSubContextValue>(
-    () => ({ isOpen, toggle, reportSelected }),
-    [isOpen, toggle, reportSelected],
+    () => ({ isOpen, toggle, hasSelectedChild, reportSelected }),
+    [isOpen, toggle, hasSelectedChild, reportSelected],
   );
 
   return (
     <MenuSubContext.Provider value={contextValue}>
-      <div
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-      >
-        {children}
-      </div>
+      {children}
     </MenuSubContext.Provider>
   );
 };

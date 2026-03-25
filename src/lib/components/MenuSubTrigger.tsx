@@ -8,12 +8,13 @@ import { MenuItemStyled, MenuItemIconStyled, MenuItemLabelStyled, SubArrowStyled
 /**
  * MenuSubTrigger — Item that toggles an inline sub-menu open/closed.
  *
- * Renders a trailing arrow ▾ (closed) or ▴ (open).
+ * - Renders a trailing arrow ▾ (closed) or ▴ (open).
+ * - Shows a **soft-select** highlight when any descendant is selected.
  */
 export const MenuSubTrigger = forwardRef<HTMLDivElement, MenuSubTriggerProps>(
   ({ children, icon, disabled = false, ...rest }, ref) => {
     const { dense } = useMenuContext();
-    const { isOpen, toggle } = useMenuSubContext();
+    const { isOpen, toggle, hasSelectedChild } = useMenuSubContext();
 
     const handleClick = useCallback(() => {
       if (disabled) return;
@@ -41,7 +42,7 @@ export const MenuSubTrigger = forwardRef<HTMLDivElement, MenuSubTriggerProps>(
         aria-disabled={disabled || undefined}
         ownerDanger={false}
         ownerDisabled={disabled}
-        ownerSelected={false}
+        ownerSelected={hasSelectedChild}
         ownerDense={dense}
         onClick={handleClick}
         onKeyDown={handleKeyDown}
