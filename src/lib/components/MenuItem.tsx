@@ -67,6 +67,7 @@ export const MenuItem = forwardRef<HTMLDivElement, MenuItemProps>(
         ownerDanger={danger}
         ownerDisabled={disabled}
         ownerSelected={selected}
+        ownerSoftSelected={false}
         ownerDense={dense}
         onClick={handleClick}
         onKeyDown={handleKeyDown}

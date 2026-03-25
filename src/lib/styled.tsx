@@ -22,12 +22,16 @@ interface MenuItemStyledProps {
   ownerDanger: boolean;
   ownerDisabled: boolean;
   ownerSelected: boolean;
+  ownerSoftSelected: boolean;
   ownerDense: boolean;
 }
 
 export const MenuItemStyled = styled.div<MenuItemStyledProps>(
-  ({ ownerDanger, ownerDisabled, ownerSelected, ownerDense }): CSSObject => {
+  ({ ownerDanger, ownerDisabled, ownerSelected, ownerSoftSelected, ownerDense }): CSSObject => {
     const { palette, spacing }: ThemeSchema = useTheme();
+
+    const selectedBg = palette?.action?.selected ?? 'rgba(25,118,210,0.08)';
+    const softSelectedBg = palette?.action?.hover ?? 'rgba(0,0,0,0.04)';
 
     const textColor = ownerDanger
       ? (palette?.error?.main ?? '#d32f2f')
@@ -65,8 +69,14 @@ export const MenuItemStyled = styled.div<MenuItemStyledProps>(
         },
       }),
 
+      // Soft-select: parent has selected child — light bg, no bold
+      ...(ownerSoftSelected && !ownerSelected && {
+        backgroundColor: softSelectedBg,
+      }),
+
+      // Full select: the actual selected item — darker bg + bold
       ...(ownerSelected && {
-        backgroundColor: palette?.action?.selected ?? 'rgba(25,118,210,0.08)',
+        backgroundColor: selectedBg,
         fontWeight: 600,
       }),
     };
