@@ -59,7 +59,7 @@ const GroupedStory = () => (
   </div>
 );
 
-// ─── With Sub-menus (hover to expand) ────────────────────
+// ─── With Sub-menus (Inline Toggle) ────────────────────────
 
 const WithSubMenusStory = () => {
   const [selected, setSelected] = useState('reports');
@@ -252,11 +252,47 @@ const DenseStory = () => (
   </div>
 );
 
+// ─── Max Height (Scroll) ─────────────────────────────────
+
+const MaxHeightStory = () => (
+  <div style={{ padding: 32 }}>
+    <div style={{ fontSize: 13, color: '#888', marginBottom: 16 }}>
+      Menu has a fixed maxHeight. Scroll or use Arrow keys to navigate.
+    </div>
+    <Menu maxHeight={250} style={{ width: 260 }}>
+      {Array.from({ length: 20 }).map((_, i) => (
+        <MenuItem key={i}>Item {i + 1}</MenuItem>
+      ))}
+    </Menu>
+  </div>
+);
+
+// ─── Keyboard Navigation (Typeahead) ─────────────────────
+
+const KeyboardNavigationStory = () => (
+  <div style={{ padding: 32 }}>
+    <div style={{ fontSize: 13, color: '#888', marginBottom: 16 }}>
+      Focus the menu and type letters (e.g. "a", "s", "b") to jump to matching items.
+    </div>
+    <Menu style={{ width: 260 }}>
+      <MenuItem>Apple</MenuItem>
+      <MenuItem>Apricot</MenuItem>
+      <MenuItem>Banana</MenuItem>
+      <MenuItem>Blueberry</MenuItem>
+      <MenuItem>Cherry</MenuItem>
+      <MenuDivider />
+      <MenuItem>Strawberry</MenuItem>
+      <MenuItem>Watermelon</MenuItem>
+    </Menu>
+  </div>
+);
+
 // ─── Playground ──────────────────────────────────────────
 
 const PlaygroundStory = (args: {
   dense: boolean;
   width: number;
+  maxHeight: number;
   showIcons: boolean;
   showShortcuts: boolean;
   showSubMenu: boolean;
@@ -266,7 +302,7 @@ const PlaygroundStory = (args: {
   showLabels: boolean;
 }) => (
   <div style={{ padding: 32 }}>
-    <Menu dense={args.dense} style={{ width: args.width }}>
+    <Menu dense={args.dense} maxHeight={args.maxHeight || undefined} style={{ width: args.width }}>
       {args.showLabels && <MenuLabel>Navigation</MenuLabel>}
 
       <MenuItem
@@ -318,16 +354,19 @@ export default meta;
 export const Basic: StoryObj = { name: 'Basic', render: () => <BasicStory /> };
 export const States: StoryObj = { name: 'States', render: () => <StatesStory /> };
 export const Grouped: StoryObj = { name: 'Grouped', render: () => <GroupedStory /> };
-export const WithSubMenus: StoryObj = { name: 'Sub-menus (hover)', render: () => <WithSubMenusStory /> };
+export const WithSubMenus: StoryObj = { name: 'Sub-menus (Inline)', render: () => <WithSubMenusStory /> };
 export const NestedSubMenus: StoryObj = { name: 'Nested Sub-menus', render: () => <NestedSubMenusStory /> };
 export const AutoExpand: StoryObj = { name: 'Auto-expand (selected)', render: () => <AutoExpandStory /> };
 export const Dense: StoryObj = { name: 'Dense', render: () => <DenseStory /> };
+export const MaxHeight: StoryObj = { name: 'Max Height', render: () => <MaxHeightStory /> };
+export const KeyboardNavigation: StoryObj = { name: 'Keyboard Navigation', render: () => <KeyboardNavigationStory /> };
 
 export const Playground: StoryObj<typeof PlaygroundStory> = {
   name: 'Playground',
   argTypes: {
     dense: { control: 'boolean' },
     width: { control: { type: 'range', min: 160, max: 400, step: 10 } },
+    maxHeight: { control: { type: 'range', min: 0, max: 800, step: 10 } },
     showIcons: { control: 'boolean' },
     showShortcuts: { control: 'boolean' },
     showSubMenu: { control: 'boolean' },
@@ -339,6 +378,7 @@ export const Playground: StoryObj<typeof PlaygroundStory> = {
   args: {
     dense: false,
     width: 260,
+    maxHeight: 0,
     showIcons: true,
     showShortcuts: false,
     showSubMenu: true,

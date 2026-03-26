@@ -62,7 +62,7 @@ export const MenuItem = forwardRef<HTMLDivElement, MenuItemProps>(
       <MenuItemStyled
         ref={ref}
         role="menuitem"
-        tabIndex={disabled ? -1 : 0}
+        tabIndex={disabled ? -1 : undefined}
         aria-disabled={disabled || undefined}
         ownerDanger={danger}
         ownerDisabled={disabled}

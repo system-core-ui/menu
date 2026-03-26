@@ -7,6 +7,8 @@ export interface MenuProps extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
   /** Compact mode — smaller padding and text */
   dense?: boolean;
+  /** Maximum height of the menu with scrollbar */
+  maxHeight?: number | string;
 }
 
 /* ─── MenuItem ────────────────────────────────────────────── */
@@ -37,6 +39,8 @@ export interface MenuLabelProps {
   className?: string;
   /** Inline styles */
   style?: CSSProperties;
+  /** Element ID */
+  id?: string;
 }
 
 /* ─── MenuDivider ─────────────────────────────────────────── */

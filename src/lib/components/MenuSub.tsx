@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, useRef, createContext, useContext } from 'react';
+import { useState, useCallback, useMemo, useRef, createContext, useContext, useId } from 'react';
 
 import type { MenuSubProps } from '../models';
 
@@ -11,6 +11,8 @@ interface MenuSubContextValue {
   hasSelectedChild: boolean;
   /** Called by child MenuItem to register/unregister selected state */
   registerSelected: () => () => void;
+  /** Unique ID for the trigger to be referenced by aria-labelledby */
+  triggerId: string;
 }
 
 const MenuSubContext = createContext<MenuSubContextValue | null>(null);
@@ -51,6 +53,7 @@ export const MenuSub = ({
   const isControlled = controlledOpen !== undefined;
   const isOpen = isControlled ? controlledOpen : uncontrolledOpen;
   const hasSelectedChild = selectedCount > 0;
+  const triggerId = useId();
 
   const setOpen = useCallback(
     (nextOpen: boolean) => {
@@ -103,8 +106,8 @@ export const MenuSub = ({
   }, [setOpen, parentSub]);
 
   const contextValue = useMemo<MenuSubContextValue>(
-    () => ({ isOpen, toggle, hasSelectedChild, registerSelected }),
-    [isOpen, toggle, hasSelectedChild, registerSelected],
+    () => ({ isOpen, toggle, hasSelectedChild, registerSelected, triggerId }),
+    [isOpen, toggle, hasSelectedChild, registerSelected, triggerId],
   );
 
   return (

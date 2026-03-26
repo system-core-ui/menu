@@ -1,7 +1,8 @@
-import { forwardRef, useMemo } from 'react';
+import { forwardRef, useMemo, useRef, useCallback } from 'react';
 
 import type { MenuProps } from '../models';
 import { MenuContext, type MenuContextValue } from '../hooks/useMenuContext';
+import { useMenuKeyboard } from '../hooks/useMenuKeyboard';
 import { MenuContainerStyled } from '../styled';
 
 /**
@@ -26,7 +27,20 @@ import { MenuContainerStyled } from '../styled';
  * ```
  */
 export const Menu = forwardRef<HTMLDivElement, MenuProps>(
-  ({ children, dense = false, className, style, ...rest }, ref) => {
+  ({ children, dense = false, maxHeight, className, style, onKeyDown, ...rest }, externalRef) => {
+    const internalRef = useRef<HTMLDivElement>(null);
+    const containerRef = (externalRef as React.RefObject<HTMLDivElement>) || internalRef;
+    
+    const { onKeyDown: handleKeyboard } = useMenuKeyboard(containerRef);
+
+    const handleKeyDown = useCallback(
+      (e: React.KeyboardEvent<HTMLDivElement>) => {
+        handleKeyboard(e);
+        onKeyDown?.(e);
+      },
+      [handleKeyboard, onKeyDown]
+    );
+
     const contextValue = useMemo<MenuContextValue>(
       () => ({ dense }),
       [dense],
@@ -35,10 +49,13 @@ export const Menu = forwardRef<HTMLDivElement, MenuProps>(
     return (
       <MenuContext.Provider value={contextValue}>
         <MenuContainerStyled
-          ref={ref}
+          ref={containerRef}
           role="menu"
+          tabIndex={0}
           className={className}
           style={style}
+          ownerMaxHeight={maxHeight}
+          onKeyDown={handleKeyDown}
           {...rest}
         >
           {children}

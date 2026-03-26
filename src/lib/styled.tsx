@@ -4,14 +4,22 @@ import type { ThemeSchema } from '@thanh-libs/theme';
 
 /* ─── Menu Container ──────────────────────────────────────── */
 
-export const MenuContainerStyled = styled.div(
-  (): CSSObject => {
+interface MenuContainerStyledProps {
+  ownerMaxHeight?: number | string;
+}
+
+export const MenuContainerStyled = styled.div<MenuContainerStyledProps>(
+  ({ ownerMaxHeight }): CSSObject => {
     const { palette }: ThemeSchema = useTheme();
 
     return {
       display: 'flex',
       flexDirection: 'column',
       color: palette?.text?.primary ?? 'rgba(0,0,0,0.87)',
+      ...(ownerMaxHeight !== undefined && {
+        maxHeight: typeof ownerMaxHeight === 'number' ? `${ownerMaxHeight}px` : ownerMaxHeight,
+        overflowY: 'auto',
+      }),
     };
   },
 );
