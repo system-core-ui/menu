@@ -3,6 +3,7 @@ import { describe, it, expect } from 'vitest';
 import { axe } from 'jest-axe';
 import { ThemeProvider } from '@thanh-libs/theme';
 import { Menu } from '../src/lib/components/Menu';
+import { MenuItem } from '../src/lib/components/MenuItem';
 
 describe('Menu', () => {
   it('renders correctly', () => {
@@ -20,7 +21,7 @@ describe('Menu', () => {
     render(
       <ThemeProvider>
         <Menu dense data-testid="menu-test">
-          <div>child item</div>
+          <MenuItem>child</MenuItem>
         </Menu>
       </ThemeProvider>,
     );
@@ -32,7 +33,7 @@ describe('Menu', () => {
     const { container } = render(
       <ThemeProvider>
         <Menu>
-          <div>child</div>
+          <MenuItem>child</MenuItem>
         </Menu>
       </ThemeProvider>,
     );

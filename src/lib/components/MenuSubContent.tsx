@@ -33,6 +33,7 @@ export const MenuSubContent = forwardRef<HTMLDivElement, MenuSubContentProps>(
         role="menu"
         aria-labelledby={triggerId}
         ownerOpen={isOpen}
+        data-collapsed={!isOpen}
         onKeyDown={handleKeyDown}
         {...rest}
       >

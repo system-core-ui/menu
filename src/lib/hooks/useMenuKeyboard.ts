@@ -8,7 +8,13 @@ export const useMenuKeyboard = (containerRef: React.RefObject<HTMLDivElement>) =
 
   const getItems = useCallback(() => {
     if (!containerRef.current) return [];
-    return Array.from(containerRef.current.querySelectorAll(ITEM_SELECTOR)) as HTMLElement[];
+    const all = Array.from(
+      containerRef.current.querySelectorAll(ITEM_SELECTOR)
+    ) as HTMLElement[];
+    // Loại bỏ items nằm trong collapsed sub-menu
+    return all.filter(
+      (el) => el.closest('[role="menu"][data-collapsed="true"]') === null
+    );
   }, [containerRef]);
 
   const setFocus = useCallback((item: HTMLElement) => {

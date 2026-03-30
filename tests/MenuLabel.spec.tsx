@@ -4,6 +4,7 @@ import { axe } from 'jest-axe';
 import { ThemeProvider } from '@thanh-libs/theme';
 import { Menu } from '../src/lib/components/Menu';
 import { MenuLabel } from '../src/lib/components/MenuLabel';
+import { MenuItem } from '../src/lib/components/MenuItem';
 
 describe('MenuLabel', () => {
   it('renders correctly', () => {
@@ -22,6 +23,7 @@ describe('MenuLabel', () => {
       <ThemeProvider>
         <Menu>
           <MenuLabel>Test</MenuLabel>
+          <MenuItem>Item</MenuItem>
         </Menu>
       </ThemeProvider>,
     );

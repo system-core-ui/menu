@@ -4,8 +4,8 @@ import { MenuDividerStyled } from '../styled';
 /**
  * MenuDivider — Visual separator between menu items.
  */
-export const MenuDivider = ({ className, style }: MenuDividerProps) => (
-  <MenuDividerStyled role="separator" className={className} style={style} />
+export const MenuDivider = ({ className, style, ...rest }: MenuDividerProps) => (
+  <MenuDividerStyled role="separator" className={className} style={style} {...rest} />
 );
 
 MenuDivider.displayName = 'MenuDivider';

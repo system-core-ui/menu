@@ -4,6 +4,7 @@ import { axe } from 'jest-axe';
 import { ThemeProvider } from '@thanh-libs/theme';
 import { Menu } from '../src/lib/components/Menu';
 import { MenuDivider } from '../src/lib/components/MenuDivider';
+import { MenuItem } from '../src/lib/components/MenuItem';
 
 describe('MenuDivider', () => {
   it('renders correctly', () => {
@@ -23,6 +24,7 @@ describe('MenuDivider', () => {
       <ThemeProvider>
         <Menu>
           <MenuDivider />
+          <MenuItem>Item</MenuItem>
         </Menu>
       </ThemeProvider>,
     );
