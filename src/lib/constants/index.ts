@@ -1,6 +1,15 @@
 /** Hover open delay for sub-menu trigger (ms) — reserved for future use */
 export const SUB_OPEN_DELAY = 150;
 
+/** Close delay for popover sub-menu (ms) */
+export const SUB_CLOSE_DELAY = 150;
+
+/** Min width for popover sub-menu content (px) */
+export const POPOVER_MIN_WIDTH = 160;
+
+/** Z-index for popover sub-menu */
+export const POPOVER_Z_INDEX = 1300;
+
 /** Collapse/expand animation duration (ms) */
 export const COLLAPSE_DURATION = 250;
 

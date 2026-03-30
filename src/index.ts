@@ -18,4 +18,7 @@ export type {
   MenuSubProps,
   MenuSubTriggerProps,
   MenuSubContentProps,
+  MenuSubMode,
+  MenuDisplay,
+  MenuSubTriggerType,
 } from './lib/models';

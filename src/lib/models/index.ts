@@ -1,4 +1,14 @@
 import type { ReactNode, CSSProperties, HTMLAttributes } from 'react';
+import type { Placement } from '@floating-ui/react';
+
+/** Sub-menu display mode */
+export type MenuSubMode = 'inline' | 'popover';
+
+/** Menu display mode */
+export type MenuDisplay = 'default' | 'icon';
+
+/** Popover sub-menu trigger type */
+export type MenuSubTriggerType = 'hover' | 'click';
 
 /* ─── Menu (Root) ─────────────────────────────────────────── */
 
@@ -9,6 +19,10 @@ export interface MenuProps extends HTMLAttributes<HTMLDivElement> {
   dense?: boolean;
   /** Maximum height of the menu with scrollbar */
   maxHeight?: number | string;
+  /** Default sub-menu mode for all nested MenuSub */
+  mode?: MenuSubMode;
+  /** Display mode: 'icon' shows only icons, 'default' shows all */
+  display?: MenuDisplay;
 }
 
 /* ─── MenuItem ────────────────────────────────────────────── */
@@ -74,6 +88,10 @@ export interface MenuSubProps {
   defaultOpen?: boolean;
   /** Callback when open state changes */
   onOpenChange?: (open: boolean) => void;
+  /** Override parent sub-menu mode */
+  mode?: MenuSubMode;
+  /** Popover trigger type */
+  trigger?: MenuSubTriggerType;
 }
 
 /* ─── MenuSubTrigger ──────────────────────────────────────── */
@@ -92,4 +110,8 @@ export interface MenuSubTriggerProps extends Omit<HTMLAttributes<HTMLDivElement>
 export interface MenuSubContentProps extends HTMLAttributes<HTMLDivElement> {
   /** Sub-menu items */
   children: ReactNode;
+  /** Placement configuration for popover mode */
+  placement?: Placement;
+  /** Distance from trigger for popover mode */
+  offset?: number;
 }
