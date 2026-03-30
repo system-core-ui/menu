@@ -287,9 +287,143 @@ const KeyboardNavigationStory = () => (
   </div>
 );
 
+// ─── Popover vs Inline Comparison ────────────────────────────
+
+const PopoverSubMenusStory = () => {
+  const [selected, setSelected] = useState('reports');
+
+  return (
+    <div style={{ padding: 32, display: 'flex', gap: 64, flexWrap: 'wrap' }}>
+      <aside style={{ background: '#f8fafc', padding: 24, borderRadius: 12, border: '1px solid #e2e8f0' }}>
+        <div style={{ fontSize: 14, fontWeight: 600, color: '#334155', marginBottom: 16 }}>
+          Mode: Inline (Default)
+        </div>
+        <Menu mode="inline" style={{ width: 260, background: '#ffffff' }}>
+          <MenuItem
+            selected={selected === 'home'}
+            onClick={() => setSelected('home')}
+          >
+            🏠 Dashboard
+          </MenuItem>
+
+          <MenuSub>
+            <MenuSubTrigger>📊 Analytics</MenuSubTrigger>
+            <MenuSubContent>
+              <MenuItem
+                selected={selected === 'overview'}
+                onClick={() => setSelected('overview')}
+              >
+                Overview
+              </MenuItem>
+              <MenuItem
+                selected={selected === 'reports'}
+                onClick={() => setSelected('reports')}
+              >
+                Reports
+              </MenuItem>
+            </MenuSubContent>
+          </MenuSub>
+        </Menu>
+      </aside>
+
+      <aside style={{ background: '#f0fdf4', padding: 24, borderRadius: 12, border: '1px solid #bbf7d0' }}>
+        <div style={{ fontSize: 14, fontWeight: 600, color: '#166534', marginBottom: 16 }}>
+          Mode: Popover (Floating)
+        </div>
+        <Menu mode="popover" style={{ width: 260, background: '#ffffff' }}>
+          <MenuItem
+            selected={selected === 'home'}
+            onClick={() => setSelected('home')}
+          >
+            🏠 Dashboard
+          </MenuItem>
+
+          <MenuSub>
+            <MenuSubTrigger>📊 Analytics</MenuSubTrigger>
+            <MenuSubContent>
+              <MenuItem
+                selected={selected === 'overview'}
+                onClick={() => setSelected('overview')}
+              >
+                Overview
+              </MenuItem>
+              <MenuItem
+                selected={selected === 'reports'}
+                onClick={() => setSelected('reports')}
+              >
+                Reports
+              </MenuItem>
+              <MenuSub>
+                <MenuSubTrigger>More Data</MenuSubTrigger>
+                <MenuSubContent>
+                  <MenuItem>Exports</MenuItem>
+                  <MenuItem>Insights</MenuItem>
+                </MenuSubContent>
+              </MenuSub>
+            </MenuSubContent>
+          </MenuSub>
+        </Menu>
+      </aside>
+    </div>
+  );
+};
+
+// ─── Icon-Only Display Mode (Sidebar Mini) ─────────────────
+
+const IconDisplayStory = () => {
+  const [selected, setSelected] = useState('home');
+
+  return (
+    <div style={{ padding: 32, height: 400 }}>
+      <aside style={{ background: '#f5f5f5', padding: 16, height: '100%', width: 'fit-content', borderRadius: 12, border: '1px solid #e5e5e5' }}>
+        <div style={{ fontSize: 13, color: '#888', marginBottom: 16, textAlign: 'center' }}>
+          Mini Sidebar
+        </div>
+        <Menu display="icon" mode="popover" style={{ height: 'calc(100% - 32px)', background: '#ffffff', borderRadius: 8 }}>
+          <MenuItem
+            icon={<>🏠</>}
+            selected={selected === 'home'}
+            onClick={() => setSelected('home')}
+          >
+            Home
+          </MenuItem>
+          <MenuItem
+            icon={<>👤</>}
+            selected={selected === 'profile'}
+            onClick={() => setSelected('profile')}
+          >
+            Profile
+          </MenuItem>
+
+          <MenuSub>
+            <MenuSubTrigger icon={<>📊</>}>Analytics</MenuSubTrigger>
+            <MenuSubContent>
+              <MenuItem>Overview</MenuItem>
+              <MenuItem>Reports</MenuItem>
+            </MenuSubContent>
+          </MenuSub>
+
+          <MenuSub>
+            <MenuSubTrigger icon={<>⚙</>}>Settings</MenuSubTrigger>
+            <MenuSubContent>
+              <MenuItem>General</MenuItem>
+              <MenuItem>Security</MenuItem>
+            </MenuSubContent>
+          </MenuSub>
+          
+          <MenuDivider />
+          <MenuItem icon={<>🚪</>} danger>Logout</MenuItem>
+        </Menu>
+      </aside>
+    </div>
+  );
+};
+
 // ─── Playground ──────────────────────────────────────────
 
 const PlaygroundStory = (args: {
+  mode: 'inline' | 'popover';
+  display: 'default' | 'icon';
   dense: boolean;
   width: number;
   maxHeight: number;
@@ -302,8 +436,8 @@ const PlaygroundStory = (args: {
   showLabels: boolean;
 }) => (
   <div style={{ padding: 32 }}>
-    <Menu dense={args.dense} maxHeight={args.maxHeight || undefined} style={{ width: args.width }}>
-      {args.showLabels && <MenuLabel>Navigation</MenuLabel>}
+    <Menu dense={args.dense} mode={args.mode} display={args.display} maxHeight={args.maxHeight || undefined} style={{ width: args.display === 'icon' ? undefined : args.width }}>
+      {args.showLabels && args.display !== 'icon' && <MenuLabel>Navigation</MenuLabel>}
 
       <MenuItem
         icon={args.showIcons ? <>🏠</> : undefined}
@@ -360,10 +494,14 @@ export const AutoExpand: StoryObj = { name: 'Auto-expand (selected)', render: ()
 export const Dense: StoryObj = { name: 'Dense', render: () => <DenseStory /> };
 export const MaxHeight: StoryObj = { name: 'Max Height', render: () => <MaxHeightStory /> };
 export const KeyboardNavigation: StoryObj = { name: 'Keyboard Navigation', render: () => <KeyboardNavigationStory /> };
+export const PopoverSubMenus: StoryObj = { name: 'Popover Sub-menus', render: () => <PopoverSubMenusStory /> };
+export const IconDisplay: StoryObj = { name: 'Icon-Only Display (Mini Sidebar)', render: () => <IconDisplayStory /> };
 
 export const Playground: StoryObj<typeof PlaygroundStory> = {
   name: 'Playground',
   argTypes: {
+    mode: { control: 'radio', options: ['inline', 'popover'] },
+    display: { control: 'radio', options: ['default', 'icon'] },
     dense: { control: 'boolean' },
     width: { control: { type: 'range', min: 160, max: 400, step: 10 } },
     maxHeight: { control: { type: 'range', min: 0, max: 800, step: 10 } },
@@ -376,6 +514,8 @@ export const Playground: StoryObj<typeof PlaygroundStory> = {
     showLabels: { control: 'boolean' },
   },
   args: {
+    mode: 'inline',
+    display: 'default',
     dense: false,
     width: 260,
     maxHeight: 0,
