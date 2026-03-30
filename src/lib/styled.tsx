@@ -1,6 +1,12 @@
 import { type CSSObject, useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 import type { ThemeSchema } from '@thanh-libs/theme';
+import {
+  FONT_SIZE_DEFAULT, FONT_SIZE_DENSE, FONT_SIZE_SHORTCUT,
+  FONT_SIZE_LABEL, FONT_SIZE_SUB_ARROW,
+  ICON_SIZE, CHECK_WIDTH, BORDER_RADIUS, LINE_HEIGHT,
+  COLLAPSE_DURATION, TRANSITION_BG_DURATION, OPACITY_DURATION,
+} from './constants';
 
 /* ─── Menu Container ──────────────────────────────────────── */
 
@@ -55,14 +61,14 @@ export const MenuItemStyled = styled.div<MenuItemStyledProps>(
         ? `${spacing?.tiny ?? '0.25rem'} ${spacing?.medium ?? '0.75rem'}`
         : `${spacing?.small ?? '0.5rem'} ${spacing?.large ?? '1rem'}`,
       color: textColor,
-      fontSize: ownerDense ? '0.8125rem' : '0.875rem',
-      lineHeight: 1.5,
+      fontSize: ownerDense ? FONT_SIZE_DENSE : FONT_SIZE_DEFAULT,
+      lineHeight: LINE_HEIGHT,
       cursor: ownerDisabled ? 'default' : 'pointer',
       userSelect: 'none',
       position: 'relative',
       outline: 'none',
-      borderRadius: '0.375rem',
-      transition: 'background-color 150ms',
+      borderRadius: BORDER_RADIUS,
+      transition: `background-color ${TRANSITION_BG_DURATION}ms`,
 
       ...(!ownerDisabled && {
         '&:hover': {
@@ -98,8 +104,8 @@ export const MenuItemIconStyled = styled.span({
   alignItems: 'center',
   justifyContent: 'center',
   flexShrink: 0,
-  width: 20,
-  height: 20,
+  width: ICON_SIZE,
+  height: ICON_SIZE,
   '& > svg': {
     width: '100%',
     height: '100%',
@@ -122,7 +128,7 @@ export const MenuItemShortcutStyled = styled.span(
       marginLeft: 'auto',
       paddingLeft: '2rem',
       color: palette?.text?.secondary ?? 'rgba(0,0,0,0.6)',
-      fontSize: '0.75rem',
+      fontSize: FONT_SIZE_SHORTCUT,
       flexShrink: 0,
     };
   },
@@ -130,7 +136,7 @@ export const MenuItemShortcutStyled = styled.span(
 
 export const MenuItemCheckStyled = styled.span({
   display: 'inline-flex',
-  width: 20,
+  width: CHECK_WIDTH,
   flexShrink: 0,
 });
 
@@ -143,7 +149,7 @@ export const MenuLabelStyled = styled.div(
     return {
       padding: `${spacing?.small ?? '0.5rem'} ${spacing?.large ?? '1rem'}`,
       color: palette?.text?.secondary ?? 'rgba(0,0,0,0.6)',
-      fontSize: '0.75rem',
+      fontSize: FONT_SIZE_LABEL,
       fontWeight: 600,
       textTransform: 'uppercase',
       letterSpacing: '0.05em',
@@ -176,7 +182,7 @@ export const SubArrowStyled = styled.span(
       marginLeft: 'auto',
       paddingLeft: '1rem',
       color: palette?.text?.secondary ?? 'rgba(0,0,0,0.6)',
-      fontSize: '0.625rem',
+      fontSize: FONT_SIZE_SUB_ARROW,
       flexShrink: 0,
     };
   },
@@ -196,7 +202,7 @@ export const InlineSubContentStyled = styled.div<InlineSubContentStyledProps>(
       overflow: 'hidden',
       maxHeight: ownerOpen ? '100vh' : 0,
       opacity: ownerOpen ? 1 : 0,
-      transition: 'max-height 250ms ease, opacity 200ms ease',
+      transition: `max-height ${COLLAPSE_DURATION}ms ease, opacity ${OPACITY_DURATION}ms ease`,
       paddingLeft: spacing?.large ?? '1rem',
     };
   },

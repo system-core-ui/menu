@@ -1,4 +1,5 @@
 import { useEffect, useRef, useCallback } from 'react';
+import { TYPEAHEAD_TIMEOUT } from '../constants';
 
 const ITEM_SELECTOR = '[role="menuitem"]:not([aria-disabled="true"])';
 
@@ -99,7 +100,7 @@ export const useMenuKeyboard = (containerRef: React.RefObject<HTMLDivElement>) =
 
           typeaheadTimeoutRef.current = window.setTimeout(() => {
             typeaheadBufferRef.current = '';
-          }, 500);
+          }, TYPEAHEAD_TIMEOUT);
         }
         break;
     }
