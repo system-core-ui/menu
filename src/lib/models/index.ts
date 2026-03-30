@@ -10,6 +10,18 @@ export type MenuDisplay = 'default' | 'icon';
 /** Popover sub-menu trigger type */
 export type MenuSubTriggerType = 'hover' | 'click';
 
+/** Floating UI settings for popover sub-menus */
+export interface MenuFloatingSettings {
+  /** Popover placement (e.g., 'right-start') */
+  placement?: Placement;
+  /** Distance in pixels between trigger and popover */
+  offset?: number;
+  /** Enable flip modifier to flip placement if space is limited */
+  flip?: boolean;
+  /** Enable shift modifier to shift popover to stay in view */
+  shift?: boolean;
+}
+
 /* ─── Menu (Root) ─────────────────────────────────────────── */
 
 export interface MenuProps extends HTMLAttributes<HTMLDivElement> {
@@ -23,6 +35,10 @@ export interface MenuProps extends HTMLAttributes<HTMLDivElement> {
   mode?: MenuSubMode;
   /** Display mode: 'icon' shows only icons, 'default' shows all */
   display?: MenuDisplay;
+  /** Default popover trigger type */
+  trigger?: MenuSubTriggerType;
+  /** Global floating UI settings for all popover sub-menus */
+  floatingSettings?: MenuFloatingSettings;
 }
 
 /* ─── MenuItem ────────────────────────────────────────────── */
@@ -110,8 +126,4 @@ export interface MenuSubTriggerProps extends Omit<HTMLAttributes<HTMLDivElement>
 export interface MenuSubContentProps extends HTMLAttributes<HTMLDivElement> {
   /** Sub-menu items */
   children: ReactNode;
-  /** Placement configuration for popover mode */
-  placement?: Placement;
-  /** Distance from trigger for popover mode */
-  offset?: number;
 }

@@ -1,8 +1,18 @@
 import { createContext, useContext } from 'react';
 
+import type { MenuSubMode, MenuDisplay, MenuSubTriggerType, MenuFloatingSettings } from '../models';
+
 export interface MenuContextValue {
   /** Whether this is a dense menu */
   dense: boolean;
+  /** Default sub-menu mode */
+  mode: MenuSubMode;
+  /** Icon-only mode */
+  display: MenuDisplay;
+  /** Default popover trigger type */
+  trigger: MenuSubTriggerType;
+  /** Global floating UI settings for all popover sub-menus */
+  floatingSettings?: MenuFloatingSettings;
 }
 
 export const MenuContext = createContext<MenuContextValue | null>(null);

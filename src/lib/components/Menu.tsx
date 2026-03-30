@@ -27,7 +27,7 @@ import { MenuContainerStyled } from '../styled';
  * ```
  */
 export const Menu = forwardRef<HTMLDivElement, MenuProps>(
-  ({ children, dense = false, maxHeight, className, style, onKeyDown, ...rest }, externalRef) => {
+  ({ children, dense = false, mode = 'inline', display = 'default', trigger = 'hover', floatingSettings, maxHeight, className, style, onKeyDown, ...rest }, externalRef) => {
     const internalRef = useRef<HTMLDivElement>(null);
     const containerRef = (externalRef as React.RefObject<HTMLDivElement>) || internalRef;
     
@@ -42,8 +42,8 @@ export const Menu = forwardRef<HTMLDivElement, MenuProps>(
     );
 
     const contextValue = useMemo<MenuContextValue>(
-      () => ({ dense }),
-      [dense],
+      () => ({ dense, mode, display, trigger, floatingSettings }),
+      [dense, mode, display, trigger, floatingSettings],
     );
 
     return (
