@@ -1,15 +1,31 @@
+const ITEM_SELECTOR = '[role="menuitem"]:not([aria-disabled="true"])';
+
 /**
- * Normalize maxHeight to a CSS-valid string.
+ * Returns all visible (non-collapsed) menu items within a container.
+ * Filters out items inside a collapsed sub-menu ([data-collapsed="true"]).
  */
-export const normalizeMaxHeight = (value: number | string): string => {
-  if (typeof value === 'number') return `${value}px`;
-  return value;
+export const getVisibleMenuItems = (container: HTMLElement): HTMLElement[] => {
+  const all = Array.from(
+    container.querySelectorAll(ITEM_SELECTOR)
+  ) as HTMLElement[];
+  return all.filter(
+    (el) => el.closest('[role="menu"][data-collapsed="true"]') === null
+  );
 };
 
 /**
- * Normalize minWidth to a CSS-valid string.
+ * Resolve text color for a menu item based on danger/disabled state.
+ * Falls back to palette.text.primary when neither danger nor disabled.
  */
-export const normalizeMinWidth = (value: number | string): string => {
-  if (typeof value === 'number') return `${value}px`;
-  return value;
+export const getTextColor = (
+  danger: boolean,
+  disabled: boolean,
+  palette: {
+    error: { main: string };
+    text: { disabled: string; primary: string };
+  }
+): string => {
+  if (danger) return palette.error.main;
+  if (disabled) return palette.text.disabled;
+  return palette.text.primary;
 };

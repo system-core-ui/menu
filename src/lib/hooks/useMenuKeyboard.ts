@@ -1,7 +1,6 @@
 import { useEffect, useRef, useCallback } from 'react';
 import { TYPEAHEAD_TIMEOUT } from '../constants';
-
-const ITEM_SELECTOR = '[role="menuitem"]:not([aria-disabled="true"])';
+import { getVisibleMenuItems } from '../helpers';
 
 export const useMenuKeyboard = (containerRef: React.RefObject<HTMLDivElement>) => {
   const typeaheadBufferRef = useRef('');
@@ -9,13 +8,7 @@ export const useMenuKeyboard = (containerRef: React.RefObject<HTMLDivElement>) =
 
   const getItems = useCallback(() => {
     if (!containerRef.current) return [];
-    const all = Array.from(
-      containerRef.current.querySelectorAll(ITEM_SELECTOR)
-    ) as HTMLElement[];
-    // Loại bỏ items nằm trong collapsed sub-menu
-    return all.filter(
-      (el) => el.closest('[role="menu"][data-collapsed="true"]') === null
-    );
+    return getVisibleMenuItems(containerRef.current);
   }, [containerRef]);
 
   const setFocus = useCallback((item: HTMLElement) => {

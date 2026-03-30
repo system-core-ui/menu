@@ -8,7 +8,7 @@ import { MenuContainerStyled } from '../styled';
 /**
  * Menu — Persistent visible list of navigation/action items.
  *
- * Always rendered (not a dropdown). Supports inline collapsible sub-menus,
+ * Always rendered — persistent visible list. Supports inline collapsible sub-menus,
  * icons, labels, dividers, groups, and selected/disabled states.
  *
  * @example
