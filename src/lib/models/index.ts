@@ -24,6 +24,46 @@ export interface MenuFloatingSettings {
 
 /* ─── Menu (Root) ─────────────────────────────────────────── */
 
+/** Color scheme for customizing menu appearance via raw CSS color strings */
+export interface MenuColorScheme {
+  /** Menu container background */
+  background?: string;
+  /** Default text color */
+  color?: string;
+
+  /** Hover state */
+  hoverBg?: string;
+  hoverColor?: string;
+
+  /** Active/selected item */
+  activeBg?: string;
+  activeColor?: string;
+
+  /** Soft-selected (parent trigger of active child) */
+  softSelectedBg?: string;
+
+  /** Danger item */
+  dangerColor?: string;
+  dangerHoverBg?: string;
+
+  /** Disabled text */
+  disabledColor?: string;
+
+  /** Secondary text (labels, shortcuts, arrows) */
+  secondaryColor?: string;
+
+  /** Divider line */
+  dividerColor?: string;
+
+  /** Focus ring color */
+  focusRingColor?: string;
+
+  /** Popover sub-menu background (nếu mode='popover') */
+  popoverBg?: string;
+  /** Popover border color */
+  popoverBorderColor?: string;
+}
+
 export interface MenuProps extends HTMLAttributes<HTMLDivElement> {
   /** Menu items */
   children: ReactNode;
@@ -39,6 +79,8 @@ export interface MenuProps extends HTMLAttributes<HTMLDivElement> {
   trigger?: MenuSubTriggerType;
   /** Global floating UI settings for all popover sub-menus */
   floatingSettings?: MenuFloatingSettings;
+  /** Custom color scheme — raw CSS color strings, partial fill */
+  colorScheme?: MenuColorScheme;
 }
 
 /* ─── MenuItem ────────────────────────────────────────────── */

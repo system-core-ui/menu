@@ -3,6 +3,7 @@ import { FloatingPortal, FloatingFocusManager } from '@floating-ui/react';
 
 import type { MenuSubContentProps } from '../models';
 import { useMenuSubContext } from './MenuSub';
+import { useMenuContext, MenuContext } from '../hooks/useMenuContext';
 import { InlineSubContentStyled, PopoverSubContentStyled } from '../styled';
 import { ITEM_SELECTOR } from '../helpers';
 
@@ -18,6 +19,9 @@ export const MenuSubContent = forwardRef<HTMLDivElement, MenuSubContentProps>(
       setFloating, floatingStyles, getFloatingProps, context,
       setOpen,
     } = useMenuSubContext();
+
+    const parentMenuContext = useMenuContext();
+    const { colorScheme } = parentMenuContext;
 
     const handleKeyDown = useCallback(
       (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -83,6 +87,7 @@ export const MenuSubContent = forwardRef<HTMLDivElement, MenuSubContentProps>(
           aria-labelledby={triggerId}
           ownerOpen={isOpen}
           data-collapsed={!isOpen}
+          ownerColorScheme={colorScheme}
           onKeyDown={handleKeyDown}
           {...rest}
         >
@@ -96,8 +101,10 @@ export const MenuSubContent = forwardRef<HTMLDivElement, MenuSubContentProps>(
 
     return (
       <FloatingPortal>
-        <FloatingFocusManager context={context} modal={false}>
-          <PopoverSubContentStyled
+        <MenuContext.Provider value={{ ...parentMenuContext, display: 'default' }}>
+          <FloatingFocusManager context={context} modal={false}>
+            <PopoverSubContentStyled
+            ownerColorScheme={colorScheme}
             ref={setFloating ? (node) => {
               setFloating(node);
               if (typeof ref === 'function') ref(node);
@@ -106,12 +113,24 @@ export const MenuSubContent = forwardRef<HTMLDivElement, MenuSubContentProps>(
             role="menu"
             aria-labelledby={triggerId}
             style={floatingStyles ?? undefined}
-            onKeyDown={handlePopoverKeyDown}
-            {...(getFloatingProps ? getFloatingProps(rest) : rest)}
+            {...(getFloatingProps ? getFloatingProps({
+              ...rest,
+              onKeyDown: (e: React.KeyboardEvent<HTMLDivElement>) => {
+                handlePopoverKeyDown(e);
+                onKeyDown?.(e);
+              }
+            }) : {
+              ...rest,
+              onKeyDown: (e: React.KeyboardEvent<HTMLDivElement>) => {
+                handlePopoverKeyDown(e);
+                onKeyDown?.(e);
+              }
+            })}
           >
             {children}
           </PopoverSubContentStyled>
         </FloatingFocusManager>
+        </MenuContext.Provider>
       </FloatingPortal>
     );
   },

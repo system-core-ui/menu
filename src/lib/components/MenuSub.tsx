@@ -8,11 +8,15 @@ import {
   useInteractions,
   safePolygon,
   FloatingContext,
+  useFloatingNodeId,
+  useFloatingParentNodeId,
+  FloatingNode,
+  FloatingTree,
 } from '@floating-ui/react';
 
 import type { MenuSubProps, MenuSubMode, MenuSubTriggerType } from '../models';
 import { useMenuContext } from '../hooks/useMenuContext';
-import { SUB_OPEN_DELAY, SUB_CLOSE_DELAY } from '../constants';
+import { SUB_CLOSE_DELAY } from '../constants';
 
 /* ─── Sub-menu context ────────────────────────────────────── */
 
@@ -217,10 +221,13 @@ const MenuSubPopover = ({
   }, [parentSub]);
 
   // Floating UI Setup
+  const nodeId = useFloatingNodeId();
+
   const { floatingSettings } = useMenuContext();
   const floating = useFloatingPosition({
     open: isOpen,
     onOpenChange: setOpen,
+    nodeId,
     placement: floatingSettings?.placement ?? 'right-start', // default popover placement
     offset: floatingSettings?.offset,
     // Default offset, flip, shift are handled by useFloatingPosition
@@ -228,8 +235,8 @@ const MenuSubPopover = ({
 
   const hover = useHover(floating.context, {
     enabled: resolvedTrigger === 'hover',
-    delay: { open: SUB_OPEN_DELAY, close: SUB_CLOSE_DELAY },
-    handleClose: safePolygon(),
+    delay: { open: 0, close: SUB_CLOSE_DELAY },
+    handleClose: safePolygon({ blockPointerEvents: true }),
   });
 
   const click = useClick(floating.context, {
@@ -283,7 +290,9 @@ const MenuSubPopover = ({
 
   return (
     <MenuSubContext.Provider value={contextValue}>
-      {children}
+      <FloatingNode id={nodeId}>
+        {children}
+      </FloatingNode>
     </MenuSubContext.Provider>
   );
 };
@@ -299,11 +308,18 @@ const MenuSubPopover = ({
  */
 export const MenuSub = ({ mode, trigger, ...props }: MenuSubProps) => {
   const { mode: parentMode, trigger: parentTrigger } = useMenuContext();
+  const parentId = useFloatingParentNodeId();
   const resolvedMode = mode ?? parentMode ?? 'inline';
   const resolvedTrigger = trigger ?? parentTrigger ?? 'hover';
 
   if (resolvedMode === 'popover') {
-    return <MenuSubPopover resolvedMode={resolvedMode} resolvedTrigger={resolvedTrigger} {...props} />;
+    const popoverElement = <MenuSubPopover resolvedMode={resolvedMode} resolvedTrigger={resolvedTrigger} {...props} />;
+    
+    // Only the top-most popover creates the FloatingTree
+    if (parentId === null) {
+      return <FloatingTree>{popoverElement}</FloatingTree>;
+    }
+    return popoverElement;
   }
   return <MenuSubInline resolvedMode={resolvedMode} resolvedTrigger={resolvedTrigger} {...props} />;
 };

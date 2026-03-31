@@ -31,7 +31,7 @@ export const MenuItem = forwardRef<HTMLDivElement, MenuItemProps>(
     },
     ref,
   ) => {
-    const { dense, display } = useMenuContext();
+    const { dense, display, colorScheme } = useMenuContext();
     const subContext = useOptionalMenuSubContext();
     const isIconOnly = display === 'icon';
 
@@ -72,6 +72,7 @@ export const MenuItem = forwardRef<HTMLDivElement, MenuItemProps>(
         ownerSoftSelected={false}
         ownerDense={dense}
         ownerIconOnly={isIconOnly}
+        ownerColorScheme={colorScheme}
         onClick={handleClick}
         onKeyDown={handleKeyDown}
         {...rest}
@@ -81,7 +82,7 @@ export const MenuItem = forwardRef<HTMLDivElement, MenuItemProps>(
         )}
         {icon && <MenuItemIconStyled aria-hidden="true">{icon}</MenuItemIconStyled>}
         <MenuItemLabelStyled ownerIconOnly={isIconOnly}>{children}</MenuItemLabelStyled>
-        {shortcut && !isIconOnly && <MenuItemShortcutStyled>{shortcut}</MenuItemShortcutStyled>}
+        {shortcut && !isIconOnly && <MenuItemShortcutStyled ownerColorScheme={colorScheme}>{shortcut}</MenuItemShortcutStyled>}
       </MenuItemStyled>
     );
   },

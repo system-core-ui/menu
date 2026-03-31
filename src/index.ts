@@ -21,4 +21,5 @@ export type {
   MenuSubMode,
   MenuDisplay,
   MenuSubTriggerType,
+  MenuColorScheme,
 } from './lib/models';

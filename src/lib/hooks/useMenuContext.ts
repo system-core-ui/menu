@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react';
 
-import type { MenuSubMode, MenuDisplay, MenuSubTriggerType, MenuFloatingSettings } from '../models';
+import type { MenuSubMode, MenuDisplay, MenuSubTriggerType, MenuFloatingSettings, MenuColorScheme } from '../models';
 
 export interface MenuContextValue {
   /** Whether this is a dense menu */
@@ -13,6 +13,7 @@ export interface MenuContextValue {
   trigger: MenuSubTriggerType;
   /** Global floating UI settings for all popover sub-menus */
   floatingSettings?: MenuFloatingSettings;
+  colorScheme?: MenuColorScheme;
 }
 
 export const MenuContext = createContext<MenuContextValue | null>(null);

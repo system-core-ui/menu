@@ -28,7 +28,7 @@ import { MenuContainerStyled } from '../styled';
  * ```
  */
 export const Menu = forwardRef<HTMLDivElement, MenuProps>(
-  ({ children, dense = false, mode = 'inline', display = 'default', trigger = 'hover', floatingSettings, maxHeight, className, style, onKeyDown, ...rest }, externalRef) => {
+  ({ children, dense = false, mode = 'inline', display = 'default', trigger = 'hover', floatingSettings, colorScheme, maxHeight, className, style, onKeyDown, ...rest }, externalRef) => {
     const internalRef = useRef<HTMLDivElement>(null);
     const mergedRef = useMergeRefs([internalRef, externalRef]);
     
@@ -43,8 +43,8 @@ export const Menu = forwardRef<HTMLDivElement, MenuProps>(
     );
 
     const contextValue = useMemo<MenuContextValue>(
-      () => ({ dense, mode, display, trigger, floatingSettings }),
-      [dense, mode, display, trigger, floatingSettings],
+      () => ({ dense, mode, display, trigger, floatingSettings, colorScheme }),
+      [dense, mode, display, trigger, floatingSettings, colorScheme],
     );
 
     return (
@@ -56,6 +56,7 @@ export const Menu = forwardRef<HTMLDivElement, MenuProps>(
           className={className}
           style={style}
           ownerMaxHeight={maxHeight}
+          ownerColorScheme={colorScheme}
           onKeyDown={handleKeyDown}
           {...rest}
         >

@@ -1,6 +1,7 @@
 import { type CSSObject, useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 import type { ThemeSchema } from '@thanh-libs/theme';
+import type { MenuColorScheme } from './models';
 import {
   FONT_SIZE_DEFAULT, FONT_SIZE_DENSE, FONT_SIZE_SHORTCUT,
   FONT_SIZE_LABEL, FONT_SIZE_SUB_ARROW,
@@ -13,16 +14,18 @@ import {
 
 interface MenuContainerStyledProps {
   ownerMaxHeight?: number | string;
+  ownerColorScheme?: MenuColorScheme;
 }
 
 export const MenuContainerStyled = styled.div<MenuContainerStyledProps>(
-  ({ ownerMaxHeight }): CSSObject => {
+  ({ ownerMaxHeight, ownerColorScheme }): CSSObject => {
     const { palette }: ThemeSchema = useTheme();
 
     return {
       display: 'flex',
       flexDirection: 'column',
-      color: palette?.text?.primary ?? 'rgba(0,0,0,0.87)',
+      ...(ownerColorScheme?.background && { backgroundColor: ownerColorScheme.background }),
+      color: ownerColorScheme?.color ?? palette?.text?.primary ?? 'rgba(0,0,0,0.87)',
       ...(ownerMaxHeight !== undefined && {
         maxHeight: typeof ownerMaxHeight === 'number' ? `${ownerMaxHeight}px` : ownerMaxHeight,
         overflowY: 'auto',
@@ -40,20 +43,21 @@ interface MenuItemStyledProps {
   ownerSoftSelected: boolean;
   ownerDense: boolean;
   ownerIconOnly: boolean;
+  ownerColorScheme?: MenuColorScheme;
 }
 
 export const MenuItemStyled = styled.div<MenuItemStyledProps>(
-  ({ ownerDanger, ownerDisabled, ownerSelected, ownerSoftSelected, ownerDense, ownerIconOnly }): CSSObject => {
+  ({ ownerDanger, ownerDisabled, ownerSelected, ownerSoftSelected, ownerDense, ownerIconOnly, ownerColorScheme }): CSSObject => {
     const { palette, spacing }: ThemeSchema = useTheme();
 
-    const selectedBg = palette?.action?.selected ?? 'rgba(25,118,210,0.08)';
-    const softSelectedBg = palette?.action?.hover ?? 'rgba(0,0,0,0.04)';
+    const selectedBg = ownerColorScheme?.activeBg ?? palette?.action?.selected ?? 'rgba(25,118,210,0.08)';
+    const softSelectedBg = ownerColorScheme?.softSelectedBg ?? palette?.action?.hover ?? 'rgba(0,0,0,0.04)';
 
     const textColor = ownerDanger
-      ? (palette?.error?.main ?? '#d32f2f')
+      ? (ownerColorScheme?.dangerColor ?? palette?.error?.main ?? '#d32f2f')
       : ownerDisabled
-        ? (palette?.text?.disabled ?? 'rgba(0,0,0,0.38)')
-        : (palette?.text?.primary ?? 'rgba(0,0,0,0.87)');
+        ? (ownerColorScheme?.disabledColor ?? palette?.text?.disabled ?? 'rgba(0,0,0,0.38)')
+        : (ownerColorScheme?.color ?? palette?.text?.primary ?? 'rgba(0,0,0,0.87)');
 
     return {
       display: 'flex',
@@ -78,13 +82,14 @@ export const MenuItemStyled = styled.div<MenuItemStyledProps>(
       ...(!ownerDisabled && {
         '&:hover': {
           backgroundColor: ownerDanger
-            ? (palette?.error?.light ?? 'rgba(211,47,47,0.08)')
-            : (palette?.action?.hover ?? 'rgba(0,0,0,0.04)'),
+            ? (ownerColorScheme?.dangerHoverBg ?? palette?.error?.light ?? 'rgba(211,47,47,0.08)')
+            : (ownerColorScheme?.hoverBg ?? palette?.action?.hover ?? 'rgba(0,0,0,0.04)'),
+          ...(ownerColorScheme?.hoverColor && { color: ownerColorScheme.hoverColor }),
         },
 
         '&:focus-visible': {
           outline: '2px solid transparent',
-          boxShadow: `inset 0 0 0 2px ${palette?.primary?.main ?? '#1976d2'}`,
+          boxShadow: `inset 0 0 0 2px ${ownerColorScheme?.focusRingColor ?? palette?.primary?.main ?? '#1976d2'}`,
         },
       }),
 
@@ -97,6 +102,7 @@ export const MenuItemStyled = styled.div<MenuItemStyledProps>(
       ...(ownerSelected && {
         backgroundColor: selectedBg,
         fontWeight: 600,
+        ...(ownerColorScheme?.activeColor && { color: ownerColorScheme.activeColor }),
       }),
     };
   },
@@ -134,14 +140,18 @@ export const MenuItemLabelStyled = styled.span<MenuItemLabelStyledProps>(
   }),
 );
 
-export const MenuItemShortcutStyled = styled.span(
-  (): CSSObject => {
+interface MenuItemShortcutStyledProps {
+  ownerColorScheme?: MenuColorScheme;
+}
+
+export const MenuItemShortcutStyled = styled.span<MenuItemShortcutStyledProps>(
+  ({ ownerColorScheme }): CSSObject => {
     const { palette }: ThemeSchema = useTheme();
 
     return {
       marginLeft: 'auto',
       paddingLeft: '2rem',
-      color: palette?.text?.secondary ?? 'rgba(0,0,0,0.6)',
+      color: ownerColorScheme?.secondaryColor ?? palette?.text?.secondary ?? 'rgba(0,0,0,0.6)',
       fontSize: FONT_SIZE_SHORTCUT,
       flexShrink: 0,
     };
@@ -156,13 +166,17 @@ export const MenuItemCheckStyled = styled.span({
 
 /* ─── MenuLabel ───────────────────────────────────────────── */
 
-export const MenuLabelStyled = styled.div(
-  (): CSSObject => {
+interface MenuLabelStyledProps {
+  ownerColorScheme?: MenuColorScheme;
+}
+
+export const MenuLabelStyled = styled.div<MenuLabelStyledProps>(
+  ({ ownerColorScheme }): CSSObject => {
     const { palette, spacing }: ThemeSchema = useTheme();
 
     return {
       padding: `${spacing?.small ?? '0.5rem'} ${spacing?.large ?? '1rem'}`,
-      color: palette?.text?.secondary ?? 'rgba(0,0,0,0.6)',
+      color: ownerColorScheme?.secondaryColor ?? palette?.text?.secondary ?? 'rgba(0,0,0,0.6)',
       fontSize: FONT_SIZE_LABEL,
       fontWeight: 600,
       textTransform: 'uppercase',
@@ -174,13 +188,17 @@ export const MenuLabelStyled = styled.div(
 
 /* ─── MenuDivider ─────────────────────────────────────────── */
 
-export const MenuDividerStyled = styled.hr(
-  (): CSSObject => {
+interface MenuDividerStyledProps {
+  ownerColorScheme?: MenuColorScheme;
+}
+
+export const MenuDividerStyled = styled.hr<MenuDividerStyledProps>(
+  ({ ownerColorScheme }): CSSObject => {
     const { palette, spacing }: ThemeSchema = useTheme();
 
     return {
       border: 'none',
-      borderTop: `1px solid ${palette?.divider ?? 'rgba(0,0,0,0.12)'}`,
+      borderTop: `1px solid ${ownerColorScheme?.dividerColor ?? palette?.divider ?? 'rgba(0,0,0,0.12)'}`,
       margin: `${spacing?.tiny ?? '0.25rem'} 0`,
     };
   },
@@ -188,14 +206,18 @@ export const MenuDividerStyled = styled.hr(
 
 /* ─── SubTrigger arrow indicator ──────────────────────────── */
 
-export const SubArrowStyled = styled.span(
-  (): CSSObject => {
+interface SubArrowStyledProps {
+  ownerColorScheme?: MenuColorScheme;
+}
+
+export const SubArrowStyled = styled.span<SubArrowStyledProps>(
+  ({ ownerColorScheme }): CSSObject => {
     const { palette }: ThemeSchema = useTheme();
 
     return {
       marginLeft: 'auto',
       paddingLeft: '1rem',
-      color: palette?.text?.secondary ?? 'rgba(0,0,0,0.6)',
+      color: ownerColorScheme?.secondaryColor ?? palette?.text?.secondary ?? 'rgba(0,0,0,0.6)',
       fontSize: FONT_SIZE_SUB_ARROW,
       flexShrink: 0,
     };
@@ -224,16 +246,20 @@ export const InlineSubContentStyled = styled.div<InlineSubContentStyledProps>(
 
 /* ─── Popover SubContent (floating) ───────────────────────── */
 
-export const PopoverSubContentStyled = styled.div(
-  (): CSSObject => {
+interface PopoverSubContentStyledProps {
+  ownerColorScheme?: MenuColorScheme;
+}
+
+export const PopoverSubContentStyled = styled.div<PopoverSubContentStyledProps>(
+  ({ ownerColorScheme }): CSSObject => {
     const { palette, spacing }: ThemeSchema = useTheme();
 
     return {
       minWidth: POPOVER_MIN_WIDTH,
-      backgroundColor: palette?.background?.paper ?? '#fff',
+      backgroundColor: ownerColorScheme?.popoverBg ?? palette?.background?.paper ?? '#fff',
       borderRadius: BORDER_RADIUS,
       boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
-      border: `1px solid ${palette?.divider ?? 'rgba(0,0,0,0.12)'}`,
+      border: `1px solid ${ownerColorScheme?.popoverBorderColor ?? palette?.divider ?? 'rgba(0,0,0,0.12)'}`,
       padding: `${spacing?.tiny ?? '0.25rem'} 0`,
       zIndex: POPOVER_Z_INDEX,
       display: 'flex',

@@ -14,7 +14,7 @@ import { MenuItemStyled, MenuItemIconStyled, MenuItemLabelStyled, SubArrowStyled
  */
 export const MenuSubTrigger = forwardRef<HTMLDivElement, MenuSubTriggerProps>(
   ({ children, icon, disabled = false, onKeyDown, ...rest }, externalRef) => {
-    const { dense, display } = useMenuContext();
+    const { dense, display, colorScheme } = useMenuContext();
     const {
       isOpen, toggle, hasSelectedChild, triggerId,
       resolvedMode, setReference, getReferenceProps,
@@ -73,8 +73,16 @@ export const MenuSubTrigger = forwardRef<HTMLDivElement, MenuSubTriggerProps>(
     );
 
     const floatingReferenceProps = resolvedMode === 'popover' && getReferenceProps
-      ? getReferenceProps()
-      : {};
+      ? getReferenceProps({
+          onClick: handleClick,
+          onKeyDown: handleKeyDown,
+          ...rest
+        })
+      : {
+          onClick: handleClick,
+          onKeyDown: handleKeyDown,
+          ...rest
+        };
 
     return (
       <MenuItemStyled
@@ -91,15 +99,13 @@ export const MenuSubTrigger = forwardRef<HTMLDivElement, MenuSubTriggerProps>(
         ownerSoftSelected={hasSelectedChild}
         ownerDense={dense}
         ownerIconOnly={isIconOnly}
-        onClick={handleClick}
-        onKeyDown={handleKeyDown}
+        ownerColorScheme={colorScheme}
         {...floatingReferenceProps}
-        {...rest}
       >
         {icon && <MenuItemIconStyled aria-hidden="true">{icon}</MenuItemIconStyled>}
         <MenuItemLabelStyled ownerIconOnly={isIconOnly}>{children}</MenuItemLabelStyled>
         {!isIconOnly && (
-          <SubArrowStyled aria-hidden="true">
+          <SubArrowStyled aria-hidden="true" ownerColorScheme={colorScheme}>
             {resolvedMode === 'popover' ? '▸' : isOpen ? '▴' : '▾'}
           </SubArrowStyled>
         )}
