@@ -48,6 +48,10 @@ export const useMenuKeyboard = (containerRef: React.RefObject<HTMLDivElement>) =
   }, [containerRef, getItems, setFocus]);
 
   const onKeyDown = useCallback((e: React.KeyboardEvent<HTMLElement>) => {
+    if (!containerRef.current?.contains(e.target as Node)) {
+      return;
+    }
+
     const items = getItems();
     if (items.length === 0) return;
 

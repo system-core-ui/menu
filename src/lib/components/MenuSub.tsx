@@ -19,6 +19,7 @@ import { SUB_OPEN_DELAY, SUB_CLOSE_DELAY } from '../constants';
 interface MenuSubContextValue {
   isOpen: boolean;
   toggle: () => void;
+  setOpen: (open: boolean) => void;
   /** True when any descendant MenuItem has selected={true} */
   hasSelectedChild: boolean;
   /** Called by child MenuItem to register/unregister selected state */
@@ -129,6 +130,7 @@ const MenuSubInline = ({
     () => ({
       isOpen,
       toggle,
+      setOpen,
       hasSelectedChild,
       registerSelected,
       triggerId,
@@ -142,7 +144,7 @@ const MenuSubInline = ({
       getReferenceProps: null,
       getFloatingProps: null,
     }),
-    [isOpen, toggle, hasSelectedChild, registerSelected, triggerId, resolvedMode, resolvedTrigger],
+    [isOpen, toggle, setOpen, hasSelectedChild, registerSelected, triggerId, resolvedMode, resolvedTrigger],
   );
 
   return (
@@ -248,6 +250,7 @@ const MenuSubPopover = ({
     () => ({
       isOpen,
       toggle,
+      setOpen,
       hasSelectedChild,
       registerSelected,
       triggerId,
@@ -263,6 +266,7 @@ const MenuSubPopover = ({
     [
       isOpen,
       toggle,
+      setOpen,
       hasSelectedChild,
       registerSelected,
       triggerId,

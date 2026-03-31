@@ -81,7 +81,7 @@ export const MenuSubTrigger = forwardRef<HTMLDivElement, MenuSubTriggerProps>(
         ref={mergedRef}
         id={triggerId}
         role="menuitem"
-        tabIndex={disabled ? -1 : undefined}
+        tabIndex={-1}
         aria-haspopup="menu"
         aria-expanded={isOpen}
         aria-disabled={disabled || undefined}
@@ -98,7 +98,11 @@ export const MenuSubTrigger = forwardRef<HTMLDivElement, MenuSubTriggerProps>(
       >
         {icon && <MenuItemIconStyled aria-hidden="true">{icon}</MenuItemIconStyled>}
         <MenuItemLabelStyled ownerIconOnly={isIconOnly}>{children}</MenuItemLabelStyled>
-        {!isIconOnly && <SubArrowStyled aria-hidden="true">{isOpen ? '▴' : '▾'}</SubArrowStyled>}
+        {!isIconOnly && (
+          <SubArrowStyled aria-hidden="true">
+            {resolvedMode === 'popover' ? '▸' : isOpen ? '▴' : '▾'}
+          </SubArrowStyled>
+        )}
       </MenuItemStyled>
     );
   },

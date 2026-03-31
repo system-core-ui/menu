@@ -1,4 +1,4 @@
-const ITEM_SELECTOR = '[role="menuitem"]:not([aria-disabled="true"])';
+export const ITEM_SELECTOR = '[role="menuitem"]:not([aria-disabled="true"])';
 
 /**
  * Returns all visible (non-collapsed) menu items within a container.

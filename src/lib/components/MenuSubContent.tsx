@@ -4,6 +4,7 @@ import { FloatingPortal, FloatingFocusManager } from '@floating-ui/react';
 import type { MenuSubContentProps } from '../models';
 import { useMenuSubContext } from './MenuSub';
 import { InlineSubContentStyled, PopoverSubContentStyled } from '../styled';
+import { ITEM_SELECTOR } from '../helpers';
 
 /**
  * MenuSubContent — Content container for sub-menu items.
@@ -15,7 +16,7 @@ export const MenuSubContent = forwardRef<HTMLDivElement, MenuSubContentProps>(
     const {
       isOpen, triggerId, resolvedMode,
       setFloating, floatingStyles, getFloatingProps, context,
-      toggle,
+      setOpen,
     } = useMenuSubContext();
 
     const handleKeyDown = useCallback(
@@ -24,12 +25,53 @@ export const MenuSubContent = forwardRef<HTMLDivElement, MenuSubContentProps>(
           e.stopPropagation();
           e.preventDefault();
           if (isOpen) {
-            toggle();
+            setOpen(false);
           }
         }
         onKeyDown?.(e);
       },
-      [isOpen, toggle, onKeyDown]
+      [isOpen, setOpen, onKeyDown]
+    );
+
+    const handlePopoverKeyDown = useCallback(
+      (e: React.KeyboardEvent<HTMLDivElement>) => {
+        const container = e.currentTarget;
+        const items = Array.from(
+          container.querySelectorAll(ITEM_SELECTOR)
+        ) as HTMLElement[];
+
+        // Even if there are no items, we might still want to handle escape/left
+        const currentIndex = items.length > 0 
+          ? items.indexOf(document.activeElement as HTMLElement)
+          : -1;
+
+        switch (e.key) {
+          case 'ArrowDown':
+            if (items.length > 0) {
+              e.preventDefault();
+              e.stopPropagation();
+              items[(currentIndex + 1) % items.length]?.focus();
+            }
+            break;
+          case 'ArrowUp':
+            if (items.length > 0) {
+              e.preventDefault();
+              e.stopPropagation();
+              items[(currentIndex - 1 + items.length) % items.length]?.focus();
+            }
+            break;
+          case 'ArrowLeft':
+          case 'Escape':
+            e.stopPropagation();
+            e.preventDefault();
+            if (isOpen) {
+              setOpen(false);
+            }
+            break;
+        }
+        onKeyDown?.(e);
+      },
+      [isOpen, setOpen, onKeyDown]
     );
 
     // INLINE MODE
@@ -64,7 +106,7 @@ export const MenuSubContent = forwardRef<HTMLDivElement, MenuSubContentProps>(
             role="menu"
             aria-labelledby={triggerId}
             style={floatingStyles ?? undefined}
-            onKeyDown={handleKeyDown}
+            onKeyDown={handlePopoverKeyDown}
             {...(getFloatingProps ? getFloatingProps(rest) : rest)}
           >
             {children}
