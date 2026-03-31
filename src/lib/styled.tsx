@@ -6,6 +6,7 @@ import {
   FONT_SIZE_LABEL, FONT_SIZE_SUB_ARROW,
   ICON_SIZE, CHECK_WIDTH, BORDER_RADIUS, LINE_HEIGHT,
   COLLAPSE_DURATION, TRANSITION_BG_DURATION, OPACITY_DURATION,
+  POPOVER_MIN_WIDTH, POPOVER_Z_INDEX,
 } from './constants';
 
 /* ─── Menu Container ──────────────────────────────────────── */
@@ -38,10 +39,11 @@ interface MenuItemStyledProps {
   ownerSelected: boolean;
   ownerSoftSelected: boolean;
   ownerDense: boolean;
+  ownerIconOnly: boolean;
 }
 
 export const MenuItemStyled = styled.div<MenuItemStyledProps>(
-  ({ ownerDanger, ownerDisabled, ownerSelected, ownerSoftSelected, ownerDense }): CSSObject => {
+  ({ ownerDanger, ownerDisabled, ownerSelected, ownerSoftSelected, ownerDense, ownerIconOnly }): CSSObject => {
     const { palette, spacing }: ThemeSchema = useTheme();
 
     const selectedBg = palette?.action?.selected ?? 'rgba(25,118,210,0.08)';
@@ -56,10 +58,13 @@ export const MenuItemStyled = styled.div<MenuItemStyledProps>(
     return {
       display: 'flex',
       alignItems: 'center',
-      gap: spacing?.small ?? '0.5rem',
+      ...(ownerIconOnly && {
+        justifyContent: 'center',
+      }),
+      gap: ownerIconOnly ? 0 : (spacing?.small ?? '0.5rem'),
       padding: ownerDense
-        ? `${spacing?.tiny ?? '0.25rem'} ${spacing?.medium ?? '0.75rem'}`
-        : `${spacing?.small ?? '0.5rem'} ${spacing?.large ?? '1rem'}`,
+        ? (ownerIconOnly ? `${spacing?.tiny ?? '0.25rem'}` : `${spacing?.tiny ?? '0.25rem'} ${spacing?.medium ?? '0.75rem'}`)
+        : (ownerIconOnly ? `${spacing?.small ?? '0.5rem'}` : `${spacing?.small ?? '0.5rem'} ${spacing?.large ?? '1rem'}`),
       color: textColor,
       fontSize: ownerDense ? FONT_SIZE_DENSE : FONT_SIZE_DEFAULT,
       lineHeight: LINE_HEIGHT,
@@ -113,12 +118,21 @@ export const MenuItemIconStyled = styled.span({
   },
 });
 
-export const MenuItemLabelStyled = styled.span({
-  flex: 1,
-  overflow: 'hidden',
-  textOverflow: 'ellipsis',
-  whiteSpace: 'nowrap',
-});
+interface MenuItemLabelStyledProps {
+  ownerIconOnly?: boolean;
+}
+
+export const MenuItemLabelStyled = styled.span<MenuItemLabelStyledProps>(
+  ({ ownerIconOnly }): CSSObject => ({
+    flex: 1,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    ...(ownerIconOnly && {
+      display: 'none',
+    }),
+  }),
+);
 
 export const MenuItemShortcutStyled = styled.span(
   (): CSSObject => {
@@ -204,6 +218,26 @@ export const InlineSubContentStyled = styled.div<InlineSubContentStyledProps>(
       opacity: ownerOpen ? 1 : 0,
       transition: `max-height ${COLLAPSE_DURATION}ms ease, opacity ${OPACITY_DURATION}ms ease`,
       paddingLeft: spacing?.large ?? '1rem',
+    };
+  },
+);
+
+/* ─── Popover SubContent (floating) ───────────────────────── */
+
+export const PopoverSubContentStyled = styled.div(
+  (): CSSObject => {
+    const { palette, spacing }: ThemeSchema = useTheme();
+
+    return {
+      minWidth: POPOVER_MIN_WIDTH,
+      backgroundColor: palette?.background?.paper ?? '#fff',
+      borderRadius: BORDER_RADIUS,
+      boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
+      border: `1px solid ${palette?.divider ?? 'rgba(0,0,0,0.12)'}`,
+      padding: `${spacing?.tiny ?? '0.25rem'} 0`,
+      zIndex: POPOVER_Z_INDEX,
+      display: 'flex',
+      flexDirection: 'column',
     };
   },
 );

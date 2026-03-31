@@ -1,4 +1,5 @@
 import { forwardRef, useMemo, useRef, useCallback } from 'react';
+import { useMergeRefs } from '@floating-ui/react';
 
 import type { MenuProps } from '../models';
 import { MenuContext, type MenuContextValue } from '../hooks/useMenuContext';
@@ -29,9 +30,9 @@ import { MenuContainerStyled } from '../styled';
 export const Menu = forwardRef<HTMLDivElement, MenuProps>(
   ({ children, dense = false, mode = 'inline', display = 'default', trigger = 'hover', floatingSettings, maxHeight, className, style, onKeyDown, ...rest }, externalRef) => {
     const internalRef = useRef<HTMLDivElement>(null);
-    const containerRef = (externalRef as React.RefObject<HTMLDivElement>) || internalRef;
+    const mergedRef = useMergeRefs([internalRef, externalRef]);
     
-    const { onKeyDown: handleKeyboard } = useMenuKeyboard(containerRef);
+    const { onKeyDown: handleKeyboard } = useMenuKeyboard(internalRef as React.RefObject<HTMLDivElement>);
 
     const handleKeyDown = useCallback(
       (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -49,7 +50,7 @@ export const Menu = forwardRef<HTMLDivElement, MenuProps>(
     return (
       <MenuContext.Provider value={contextValue}>
         <MenuContainerStyled
-          ref={containerRef}
+          ref={mergedRef}
           role="menu"
           tabIndex={0}
           className={className}

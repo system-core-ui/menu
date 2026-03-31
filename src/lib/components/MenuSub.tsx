@@ -215,10 +215,12 @@ const MenuSubPopover = ({
   }, [parentSub]);
 
   // Floating UI Setup
+  const { floatingSettings } = useMenuContext();
   const floating = useFloatingPosition({
     open: isOpen,
     onOpenChange: setOpen,
-    placement: 'right-start', // default popover placement
+    placement: floatingSettings?.placement ?? 'right-start', // default popover placement
+    offset: floatingSettings?.offset,
     // Default offset, flip, shift are handled by useFloatingPosition
   });
 

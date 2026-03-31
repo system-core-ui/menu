@@ -31,8 +31,9 @@ export const MenuItem = forwardRef<HTMLDivElement, MenuItemProps>(
     },
     ref,
   ) => {
-    const { dense } = useMenuContext();
+    const { dense, display } = useMenuContext();
     const subContext = useOptionalMenuSubContext();
+    const isIconOnly = display === 'icon';
 
     // Register/unregister selected state with parent MenuSub
     useEffect(() => {
@@ -69,16 +70,17 @@ export const MenuItem = forwardRef<HTMLDivElement, MenuItemProps>(
         ownerSelected={selected}
         ownerSoftSelected={false}
         ownerDense={dense}
+        ownerIconOnly={isIconOnly}
         onClick={handleClick}
         onKeyDown={handleKeyDown}
         {...rest}
       >
-        {selected && (
+        {selected && !isIconOnly && (
           <MenuItemCheckStyled aria-hidden="true">✓</MenuItemCheckStyled>
         )}
         {icon && <MenuItemIconStyled aria-hidden="true">{icon}</MenuItemIconStyled>}
-        <MenuItemLabelStyled>{children}</MenuItemLabelStyled>
-        {shortcut && <MenuItemShortcutStyled>{shortcut}</MenuItemShortcutStyled>}
+        <MenuItemLabelStyled ownerIconOnly={isIconOnly}>{children}</MenuItemLabelStyled>
+        {shortcut && !isIconOnly && <MenuItemShortcutStyled>{shortcut}</MenuItemShortcutStyled>}
       </MenuItemStyled>
     );
   },

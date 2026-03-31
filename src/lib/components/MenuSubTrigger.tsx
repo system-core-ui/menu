@@ -1,4 +1,5 @@
 import { forwardRef, useCallback, useEffect, useRef } from 'react';
+import { useMergeRefs } from '@floating-ui/react';
 
 import type { MenuSubTriggerProps } from '../models';
 import { useMenuContext } from '../hooks/useMenuContext';
@@ -13,19 +14,27 @@ import { MenuItemStyled, MenuItemIconStyled, MenuItemLabelStyled, SubArrowStyled
  */
 export const MenuSubTrigger = forwardRef<HTMLDivElement, MenuSubTriggerProps>(
   ({ children, icon, disabled = false, onKeyDown, ...rest }, externalRef) => {
-    const { dense } = useMenuContext();
-    const { isOpen, toggle, hasSelectedChild, triggerId } = useMenuSubContext();
+    const { dense, display } = useMenuContext();
+    const {
+      isOpen, toggle, hasSelectedChild, triggerId,
+      resolvedMode, setReference, getReferenceProps,
+    } = useMenuSubContext();
+    const isIconOnly = display === 'icon';
 
     const internalRef = useRef<HTMLDivElement>(null);
-    const triggerRef = (externalRef as React.RefObject<HTMLDivElement>) || internalRef;
+    const mergedRef = useMergeRefs([
+      internalRef,
+      externalRef,
+      ...(resolvedMode === 'popover' && setReference ? [setReference] : []),
+    ]);
     const prevOpenRef = useRef(isOpen);
 
     useEffect(() => {
       if (prevOpenRef.current && !isOpen) {
-        triggerRef.current?.focus();
+        internalRef.current?.focus();
       }
       prevOpenRef.current = isOpen;
-    }, [isOpen, triggerRef]);
+    }, [isOpen]);
 
     const handleClick = useCallback(() => {
       if (disabled) return;
@@ -63,9 +72,13 @@ export const MenuSubTrigger = forwardRef<HTMLDivElement, MenuSubTriggerProps>(
       [disabled, toggle, isOpen, onKeyDown],
     );
 
+    const floatingReferenceProps = resolvedMode === 'popover' && getReferenceProps
+      ? getReferenceProps()
+      : {};
+
     return (
       <MenuItemStyled
-        ref={triggerRef}
+        ref={mergedRef}
         id={triggerId}
         role="menuitem"
         tabIndex={disabled ? -1 : undefined}
@@ -77,13 +90,15 @@ export const MenuSubTrigger = forwardRef<HTMLDivElement, MenuSubTriggerProps>(
         ownerSelected={false}
         ownerSoftSelected={hasSelectedChild}
         ownerDense={dense}
+        ownerIconOnly={isIconOnly}
         onClick={handleClick}
         onKeyDown={handleKeyDown}
+        {...floatingReferenceProps}
         {...rest}
       >
         {icon && <MenuItemIconStyled aria-hidden="true">{icon}</MenuItemIconStyled>}
-        <MenuItemLabelStyled>{children}</MenuItemLabelStyled>
-        <SubArrowStyled aria-hidden="true">{isOpen ? '▴' : '▾'}</SubArrowStyled>
+        <MenuItemLabelStyled ownerIconOnly={isIconOnly}>{children}</MenuItemLabelStyled>
+        {!isIconOnly && <SubArrowStyled aria-hidden="true">{isOpen ? '▴' : '▾'}</SubArrowStyled>}
       </MenuItemStyled>
     );
   },
