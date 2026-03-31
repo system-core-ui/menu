@@ -65,6 +65,7 @@ export const MenuItem = forwardRef<HTMLDivElement, MenuItemProps>(
         role="menuitem"
         tabIndex={-1}
         aria-disabled={disabled || undefined}
+        aria-current={selected ? 'page' : undefined}
         ownerDanger={danger}
         ownerDisabled={disabled}
         ownerSelected={selected}
