@@ -62,5 +62,8 @@
       "prerelease": "node check-deps.mjs && yarn vitest run --passWithNoTests",
       "postbump": "yarn vite build"
     }
+  },
+  "dependencies": {
+    "@thanh-libs/utils": "^0.0.8"
   }
 }
