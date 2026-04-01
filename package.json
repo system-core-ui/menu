@@ -59,8 +59,8 @@
   },
   "standard-version": {
     "scripts": {
-      "prerelease": "node check-deps.mjs && npx vitest run --passWithNoTests",
-      "postbump": "npx vite build"
+      "prerelease": "node check-deps.mjs && yarn vitest run --passWithNoTests",
+      "postbump": "yarn vite build"
     }
   }
 }
