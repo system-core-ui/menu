@@ -57,7 +57,7 @@ describe('MenuItem', () => {
         </Menu>
       </ThemeProvider>,
     );
-    expect(screen.getByText('✓')).toBeInTheDocument();
+    expect(screen.getByRole('menuitem', { name: /selected item/i })).toHaveAttribute('aria-current', 'page');
   });
 
   it('handles keyboard enter', async () => {
