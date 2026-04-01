@@ -698,3 +698,108 @@ export const Playground: StoryObj<typeof PlaygroundStory> = {
   },
   render: (args) => <PlaygroundStory {...args} />,
 };
+
+// ─── Visual Enhancements ─────────────────────────────────
+
+export const ActiveIndicatorDot: StoryObj = {
+  name: 'Active Indicator — Dot (Default)',
+  render: () => (
+    <Menu style={{ width: 260 }}>
+      <MenuItem icon={<span>🏠</span>} selected>Dashboard</MenuItem>
+      <MenuItem icon={<span>👤</span>}>Profile</MenuItem>
+      <MenuItem icon={<span>⚙</span>}>Settings</MenuItem>
+    </Menu>
+  ),
+};
+
+export const ActiveIndicatorBar: StoryObj = {
+  name: 'Active Indicator — Bar',
+  render: () => (
+    <Menu activeIndicator="bar" style={{ width: 260 }}>
+      <MenuItem icon={<span>🏠</span>} selected>Dashboard</MenuItem>
+      <MenuItem icon={<span>👤</span>}>Profile</MenuItem>
+      <MenuItem icon={<span>⚙</span>}>Settings</MenuItem>
+    </Menu>
+  ),
+};
+
+export const ActiveIndicatorOff: StoryObj = {
+  name: 'Active Indicator — Off',
+  render: () => (
+    <Menu activeIndicator={false} style={{ width: 260 }}>
+      <MenuItem icon={<span>🏠</span>} selected>Dashboard</MenuItem>
+      <MenuItem icon={<span>👤</span>}>Profile</MenuItem>
+    </Menu>
+  ),
+};
+
+export const InlineDotIndicator: StoryObj = {
+  name: 'Inline Dot Indicator',
+  render: () => (
+    <Menu showDot style={{ width: 280 }}>
+      <MenuItem icon={<span>🏠</span>} selected>Dashboard</MenuItem>
+      <MenuSub defaultOpen>
+        <MenuSubTrigger icon={<span>📊</span>}>Analytics</MenuSubTrigger>
+        <MenuSubContent>
+          <MenuItem>Overview</MenuItem>
+          <MenuItem selected>Reports</MenuItem>
+          <MenuItem>Exports</MenuItem>
+        </MenuSubContent>
+      </MenuSub>
+      <MenuSub defaultOpen>
+        <MenuSubTrigger icon={<span>⚙</span>}>Settings</MenuSubTrigger>
+        <MenuSubContent>
+          <MenuItem>General</MenuItem>
+          <MenuItem>Security</MenuItem>
+        </MenuSubContent>
+      </MenuSub>
+    </Menu>
+  ),
+};
+
+export const VisualHierarchy: StoryObj = {
+  name: 'Visual Hierarchy (All Enhancements)',
+  render: () => (
+    <Menu showDot style={{ width: 300 }}>
+      <MenuItem icon={<span>🏠</span>} selected>Dashboard</MenuItem>
+      <MenuItem icon={<span>📧</span>}>Messages</MenuItem>
+      <MenuDivider />
+      <MenuSub defaultOpen>
+        <MenuSubTrigger icon={<span>📊</span>}>Analytics</MenuSubTrigger>
+        <MenuSubContent>
+          <MenuItem>Overview</MenuItem>
+          <MenuItem selected>Reports</MenuItem>
+          <MenuItem>Exports</MenuItem>
+        </MenuSubContent>
+      </MenuSub>
+      <MenuSub>
+        <MenuSubTrigger icon={<span>⚙</span>}>Settings</MenuSubTrigger>
+        <MenuSubContent>
+          <MenuItem>General</MenuItem>
+          <MenuItem>Security</MenuItem>
+          <MenuItem>Notifications</MenuItem>
+        </MenuSubContent>
+      </MenuSub>
+      <MenuDivider />
+      <MenuItem icon={<span>👤</span>}>Profile</MenuItem>
+      <MenuItem icon={<span>🚪</span>} danger>Logout</MenuItem>
+    </Menu>
+  ),
+};
+
+export const ActiveIndicatorBarWithDots: StoryObj = {
+  name: 'Bar Indicator + Inline Dots',
+  render: () => (
+    <Menu activeIndicator="bar" showDot style={{ width: 280 }}>
+      <MenuItem icon={<span>🏠</span>} selected>Dashboard</MenuItem>
+      <MenuSub defaultOpen>
+        <MenuSubTrigger icon={<span>📊</span>}>Analytics</MenuSubTrigger>
+        <MenuSubContent>
+          <MenuItem>Overview</MenuItem>
+          <MenuItem selected>Reports</MenuItem>
+        </MenuSubContent>
+      </MenuSub>
+    </Menu>
+  ),
+};
+

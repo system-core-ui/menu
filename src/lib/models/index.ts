@@ -62,7 +62,20 @@ export interface MenuColorScheme {
   popoverBg?: string;
   /** Popover border color */
   popoverBorderColor?: string;
+  /** Dot indicator color for inline sub-content children (border color) */
+  dotColor?: string;
+  /** Dot indicator active/filled color */
+  dotActiveColor?: string;
+  /** Child item hover text color (items inside SubContent) */
+  childHoverColor?: string;
+  /** Child item hover background color (items inside SubContent) */
+  childHoverBg?: string;
+  /** Active indicator icon color (parent items — dot/bar border + fill) */
+  activeIconColor?: string;
 }
+
+/** Active indicator variant for selected menu items */
+export type MenuActiveIndicator = 'dot' | 'bar' | false | ReactNode;
 
 export interface MenuProps extends HTMLAttributes<HTMLDivElement> {
   /** Menu items */
@@ -81,6 +94,16 @@ export interface MenuProps extends HTMLAttributes<HTMLDivElement> {
   floatingSettings?: MenuFloatingSettings;
   /** Custom color scheme — raw CSS color strings, partial fill */
   colorScheme?: MenuColorScheme;
+  /**
+   * Active indicator on selected items.
+   * - 'dot' (default): filled dot beside selected item
+   * - 'bar': vertical bar beside selected item
+   * - false: disable indicator
+   * - ReactNode: custom indicator element
+   */
+  activeIndicator?: MenuActiveIndicator;
+  /** Show inline dot bullets on child items inside SubContent. Default: false */
+  showDot?: boolean;
 }
 
 /* ─── MenuItem ────────────────────────────────────────────── */

@@ -8,7 +8,9 @@ import {
   MenuItemIconStyled,
   MenuItemLabelStyled,
   MenuItemShortcutStyled,
-  MenuItemCheckStyled,
+  MenuItemIndicatorStyled,
+  DotIndicatorStyled,
+  BarIndicatorStyled,
 } from '../styled';
 
 /**
@@ -31,7 +33,7 @@ export const MenuItem = forwardRef<HTMLDivElement, MenuItemProps>(
     },
     ref,
   ) => {
-    const { dense, display, colorScheme } = useMenuContext();
+    const { dense, display, colorScheme, activeIndicator } = useMenuContext();
     const subContext = useOptionalMenuSubContext();
     const isIconOnly = display === 'icon';
 
@@ -59,6 +61,29 @@ export const MenuItem = forwardRef<HTMLDivElement, MenuItemProps>(
       [disabled, handleClick],
     );
 
+    const renderIndicator = () => {
+      if (!selected || activeIndicator === false || isIconOnly) return null;
+
+      if (
+        activeIndicator !== 'dot' &&
+        activeIndicator !== 'bar' &&
+        activeIndicator !== undefined
+      ) {
+        return (
+          <MenuItemIndicatorStyled>{activeIndicator}</MenuItemIndicatorStyled>
+        );
+      }
+
+      const variant = activeIndicator ?? 'dot';
+      const IndicatorComponent = variant === 'bar' ? BarIndicatorStyled : DotIndicatorStyled;
+
+      return (
+        <MenuItemIndicatorStyled>
+          <IndicatorComponent ownerColorScheme={colorScheme} />
+        </MenuItemIndicatorStyled>
+      );
+    };
+
     return (
       <MenuItemStyled
         ref={ref}
@@ -77,12 +102,10 @@ export const MenuItem = forwardRef<HTMLDivElement, MenuItemProps>(
         onKeyDown={handleKeyDown}
         {...rest}
       >
-        {selected && !isIconOnly && (
-          <MenuItemCheckStyled aria-hidden="true">✓</MenuItemCheckStyled>
-        )}
         {icon && <MenuItemIconStyled aria-hidden="true">{icon}</MenuItemIconStyled>}
         <MenuItemLabelStyled ownerIconOnly={isIconOnly}>{children}</MenuItemLabelStyled>
         {shortcut && !isIconOnly && <MenuItemShortcutStyled ownerColorScheme={colorScheme}>{shortcut}</MenuItemShortcutStyled>}
+        {renderIndicator()}
       </MenuItemStyled>
     );
   },
