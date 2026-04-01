@@ -1,6 +1,6 @@
 import { useEffect, useRef, useCallback } from 'react';
 import { TYPEAHEAD_TIMEOUT } from '../constants';
-import { getVisibleMenuItems } from '../helpers';
+import { getVisibleMenuItems, cancelEvent } from '../helpers';
 
 export const useMenuKeyboard = (containerRef: React.RefObject<HTMLDivElement>) => {
   const typeaheadBufferRef = useRef('');
@@ -77,8 +77,7 @@ export const useMenuKeyboard = (containerRef: React.RefObject<HTMLDivElement>) =
       default:
         // Typeahead
         if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
-          e.preventDefault();
-          e.stopPropagation();
+          cancelEvent(e);
 
           if (typeaheadTimeoutRef.current) {
             clearTimeout(typeaheadTimeoutRef.current);

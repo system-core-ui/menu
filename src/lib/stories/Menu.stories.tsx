@@ -421,9 +421,141 @@ const IconDisplayStory = () => {
 
 // ─── Playground ──────────────────────────────────────────
 
+// ─── Custom Color Scheme ───────────────────────────────────
+
+const CustomColorSchemeStory = (args: { mode: 'inline' | 'popover' }) => {
+  const [selectedBlue, setSelectedBlue] = useState('users');
+  const [selectedDark, setSelectedDark] = useState('analytics');
+
+  return (
+    <div style={{ display: 'flex', gap: '2rem', padding: '2rem', backgroundColor: '#f5f5f5', height: 440 }}>
+      {/* Blue sidebar */}
+      <aside style={{ display: 'flex', flexDirection: 'column', width: 260, border: '1px solid #115293', borderRadius: 8, overflow: 'hidden' }}>
+        <div style={{ background: '#115293', color: '#fff', padding: '12px 16px', fontWeight: 600, fontSize: 14 }}>Blue Sidebar</div>
+        <Menu
+          mode={args.mode}
+          colorScheme={{
+            background: '#1565c0',
+            color: '#fff',
+            hoverBg: 'rgba(255,255,255,0.12)',
+            hoverColor: '#fff',
+            activeBg: 'rgba(255,255,255,0.24)',
+            activeColor: '#fff',
+            softSelectedBg: 'rgba(255,255,255,0.08)',
+            secondaryColor: 'rgba(255,255,255,0.7)',
+            dividerColor: 'rgba(255,255,255,0.2)',
+            focusRingColor: '#fff',
+            dangerColor: '#ff8a80',
+            dangerHoverBg: 'rgba(255,138,128,0.16)',
+            disabledColor: 'rgba(255,255,255,0.38)',
+            popoverBg: '#115293',
+            popoverBorderColor: 'rgba(255,255,255,0.2)',
+          }}
+          style={{ flex: 1, borderRadius: 0 }}
+        >
+          <MenuLabel>Navigation</MenuLabel>
+          <MenuItem icon={<span>🏠</span>} selected={selectedBlue === 'home'} onClick={() => setSelectedBlue('home')}>Home</MenuItem>
+          <MenuItem icon={<span>👤</span>} selected={selectedBlue === 'users'} onClick={() => setSelectedBlue('users')}>Users</MenuItem>
+          <MenuSub>
+            <MenuSubTrigger icon={<span>⚙️</span>}>Settings</MenuSubTrigger>
+            <MenuSubContent>
+              <MenuItem>General</MenuItem>
+              <MenuItem>Security</MenuItem>
+              <MenuSub>
+                <MenuSubTrigger>Advanced</MenuSubTrigger>
+                <MenuSubContent>
+                  <MenuItem>API Keys</MenuItem>
+                  <MenuItem>Webhooks</MenuItem>
+                </MenuSubContent>
+              </MenuSub>
+            </MenuSubContent>
+          </MenuSub>
+          <MenuDivider />
+          <MenuItem disabled>Archived</MenuItem>
+          <MenuItem danger>Delete Account</MenuItem>
+        </Menu>
+      </aside>
+
+      {/* Dark sidebar */}
+      <aside style={{ display: 'flex', flexDirection: 'column', width: 260, border: '1px solid #181825', borderRadius: 8, overflow: 'hidden' }}>
+        <div style={{ background: '#181825', color: '#cdd6f4', padding: '12px 16px', fontWeight: 600, fontSize: 14 }}>Dark Sidebar</div>
+        <Menu
+          mode={args.mode}
+          colorScheme={{
+            background: '#1e1e2e',
+            color: '#cdd6f4',
+            hoverBg: 'rgba(205,214,244,0.08)',
+            activeBg: 'rgba(137,180,250,0.2)',
+            activeColor: '#89b4fa',
+            softSelectedBg: 'rgba(137,180,250,0.08)',
+            secondaryColor: 'rgba(205,214,244,0.5)',
+            dividerColor: 'rgba(205,214,244,0.12)',
+            focusRingColor: '#89b4fa',
+            dangerColor: '#f38ba8',
+            dangerHoverBg: 'rgba(243,139,168,0.12)',
+            disabledColor: 'rgba(205,214,244,0.3)',
+            popoverBg: '#181825',
+            popoverBorderColor: 'rgba(205,214,244,0.1)',
+          }}
+          style={{ flex: 1, borderRadius: 0 }}
+        >
+          <MenuLabel>Workspace</MenuLabel>
+          <MenuItem icon={<span>📁</span>} selected={selectedDark === 'projects'} onClick={() => setSelectedDark('projects')}>Projects</MenuItem>
+          <MenuItem icon={<span>📊</span>} selected={selectedDark === 'analytics'} onClick={() => setSelectedDark('analytics')}>Analytics</MenuItem>
+          <MenuSub>
+            <MenuSubTrigger icon={<span>🔧</span>}>Tools</MenuSubTrigger>
+            <MenuSubContent>
+              <MenuItem>Debugger</MenuItem>
+              <MenuItem>Profiler</MenuItem>
+            </MenuSubContent>
+          </MenuSub>
+          <MenuDivider />
+          <MenuItem disabled>Legacy Module</MenuItem>
+          <MenuItem danger>Reset Workspace</MenuItem>
+        </Menu>
+      </aside>
+
+      {/* No colorScheme — default behavior */}
+      <aside style={{ display: 'flex', flexDirection: 'column', width: 260, border: '1px solid #e0e0e0', borderRadius: 8, overflow: 'hidden' }}>
+        <div style={{ background: '#f5f5f5', color: '#333', padding: '12px 16px', fontWeight: 600, borderBottom: '1px solid #e0e0e0', fontSize: 14 }}>Default Sidebar</div>
+        <Menu mode={args.mode} style={{ flex: 1, background: '#fff', borderRadius: 0 }}>
+          <MenuLabel>Account</MenuLabel>
+          <MenuItem icon={<span>👤</span>}>Profile</MenuItem>
+          <MenuItem icon={<span>🔔</span>} selected>Notifications</MenuItem>
+          <MenuSub>
+            <MenuSubTrigger icon={<span>🎨</span>}>Theme</MenuSubTrigger>
+            <MenuSubContent>
+              <MenuItem>Light</MenuItem>
+              <MenuItem>Dark</MenuItem>
+              <MenuSub>
+                <MenuSubTrigger>Custom</MenuSubTrigger>
+                <MenuSubContent>
+                  <MenuItem>Red Theme</MenuItem>
+                  <MenuItem>Blue Theme</MenuItem>
+                </MenuSubContent>
+              </MenuSub>
+            </MenuSubContent>
+          </MenuSub>
+          <MenuDivider />
+          <MenuItem disabled>Billing</MenuItem>
+          <MenuItem danger>Log Out</MenuItem>
+        </Menu>
+      </aside>
+    </div>
+  );
+};
+
+// ─── Playground ──────────────────────────────────────────
+
 const PlaygroundStory = (args: {
+  activeItem: string;
   mode: 'inline' | 'popover';
   display: 'default' | 'icon';
+  trigger: 'hover' | 'click';
+  floatingPlacement: 'right-start' | 'right' | 'right-end' | 'bottom-start' | 'bottom' | 'bottom-end' | 'left-start' | 'left' | 'left-end' | 'top-start' | 'top' | 'top-end';
+  floatingOffset: number;
+  floatingShift: boolean;
+  floatingFlip: boolean;
   dense: boolean;
   width: number;
   maxHeight: number;
@@ -432,23 +564,36 @@ const PlaygroundStory = (args: {
   showSubMenu: boolean;
   showDanger: boolean;
   showDisabled: boolean;
-  showSelected: boolean;
   showLabels: boolean;
 }) => (
   <div style={{ padding: 32 }}>
-    <Menu dense={args.dense} mode={args.mode} display={args.display} maxHeight={args.maxHeight || undefined} style={{ width: args.display === 'icon' ? undefined : args.width }}>
+    <Menu
+      dense={args.dense}
+      mode={args.mode}
+      display={args.display}
+      trigger={args.trigger}
+      maxHeight={args.maxHeight || undefined}
+      floatingSettings={{
+        placement: args.floatingPlacement,
+        offset: args.floatingOffset,
+        shift: args.floatingShift,
+        flip: args.floatingFlip,
+      }}
+      style={{ width: args.display === 'icon' ? undefined : args.width }}
+    >
       {args.showLabels && args.display !== 'icon' && <MenuLabel>Navigation</MenuLabel>}
 
       <MenuItem
         icon={args.showIcons ? <>🏠</> : undefined}
         shortcut={args.showShortcuts ? '⌘1' : undefined}
-        selected={args.showSelected}
+        selected={args.activeItem === 'home'}
       >
         Home
       </MenuItem>
       <MenuItem
         icon={args.showIcons ? <>👤</> : undefined}
         shortcut={args.showShortcuts ? '⌘2' : undefined}
+        selected={args.activeItem === 'profile'}
       >
         Profile
       </MenuItem>
@@ -461,9 +606,9 @@ const PlaygroundStory = (args: {
               Settings
             </MenuSubTrigger>
             <MenuSubContent>
-              <MenuItem>General</MenuItem>
-              <MenuItem>Security</MenuItem>
-              <MenuItem>Notifications</MenuItem>
+              <MenuItem selected={args.activeItem === 'general'}>General</MenuItem>
+              <MenuItem selected={args.activeItem === 'security'}>Security</MenuItem>
+              <MenuItem selected={args.activeItem === 'notifications'}>Notifications</MenuItem>
             </MenuSubContent>
           </MenuSub>
         </>
@@ -472,7 +617,7 @@ const PlaygroundStory = (args: {
       <MenuDivider />
 
       {args.showDisabled && <MenuItem disabled>Admin (restricted)</MenuItem>}
-      {args.showDanger && <MenuItem danger>Logout</MenuItem>}
+      {args.showDanger && <MenuItem danger selected={args.activeItem === 'logout'}>Logout</MenuItem>}
     </Menu>
   </div>
 );
@@ -497,11 +642,31 @@ export const KeyboardNavigation: StoryObj = { name: 'Keyboard Navigation', rende
 export const PopoverSubMenus: StoryObj = { name: 'Popover Sub-menus', render: () => <PopoverSubMenusStory /> };
 export const IconDisplay: StoryObj = { name: 'Icon-Only Display (Mini Sidebar)', render: () => <IconDisplayStory /> };
 
+export const CustomColorScheme: StoryObj<typeof CustomColorSchemeStory> = {
+  name: 'Custom Color Scheme',
+  argTypes: {
+    mode: { control: 'radio', options: ['inline', 'popover'] },
+  },
+  args: {
+    mode: 'popover',
+  },
+  render: (args) => <CustomColorSchemeStory {...args} />,
+};
+
 export const Playground: StoryObj<typeof PlaygroundStory> = {
   name: 'Playground',
   argTypes: {
+    activeItem: {
+      control: 'select',
+      options: ['home', 'profile', 'general', 'security', 'notifications', 'logout', 'none'],
+    },
     mode: { control: 'radio', options: ['inline', 'popover'] },
     display: { control: 'radio', options: ['default', 'icon'] },
+    trigger: { control: 'radio', options: ['hover', 'click'] },
+    floatingPlacement: { control: 'select', options: ['right-start', 'right', 'right-end', 'bottom-start', 'bottom', 'bottom-end', 'left-start', 'left', 'left-end', 'top-start', 'top', 'top-end'] },
+    floatingOffset: { control: 'number' },
+    floatingShift: { control: 'boolean' },
+    floatingFlip: { control: 'boolean' },
     dense: { control: 'boolean' },
     width: { control: { type: 'range', min: 160, max: 400, step: 10 } },
     maxHeight: { control: { type: 'range', min: 0, max: 800, step: 10 } },
@@ -510,12 +675,17 @@ export const Playground: StoryObj<typeof PlaygroundStory> = {
     showSubMenu: { control: 'boolean' },
     showDanger: { control: 'boolean' },
     showDisabled: { control: 'boolean' },
-    showSelected: { control: 'boolean' },
     showLabels: { control: 'boolean' },
   },
   args: {
+    activeItem: 'home',
     mode: 'inline',
     display: 'default',
+    trigger: 'hover',
+    floatingPlacement: 'right-start',
+    floatingOffset: 4,
+    floatingShift: true,
+    floatingFlip: true,
     dense: false,
     width: 260,
     maxHeight: 0,
@@ -524,7 +694,6 @@ export const Playground: StoryObj<typeof PlaygroundStory> = {
     showSubMenu: true,
     showDanger: true,
     showDisabled: true,
-    showSelected: true,
     showLabels: true,
   },
   render: (args) => <PlaygroundStory {...args} />,

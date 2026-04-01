@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { axe } from 'jest-axe';
 import { ThemeProvider } from '@thanh-libs/theme';
 import { Menu } from '../src/lib/components/Menu';

@@ -29,3 +29,11 @@ export const getTextColor = (
   if (disabled) return palette.text.disabled;
   return palette.text.primary;
 };
+
+/**
+ * Stop event propagation and prevent default action.
+ */
+export const cancelEvent = (e: React.SyntheticEvent | Event) => {
+  e.stopPropagation();
+  e.preventDefault();
+};
