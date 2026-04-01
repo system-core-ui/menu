@@ -15,7 +15,7 @@ export default defineConfig(() => ({
     }),
   ],
   resolve: {
-    conditions: ['@thanh-libs/source'],
+    conditions: process.env.CI ? [] : ['@thanh-libs/source'],
   },
   build: {
     outDir: './dist',
