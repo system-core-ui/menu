@@ -1,6 +1,7 @@
 import { type CSSObject, useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 import type { ThemeSchema } from '@thanh-libs/theme';
+import { pxToRem } from '@thanh-libs/utils';
 import type { MenuColorScheme } from '../models';
 import {
   FONT_SIZE_DEFAULT, FONT_SIZE_DENSE, FONT_SIZE_SHORTCUT,
@@ -61,7 +62,7 @@ export const MenuItemStyled = styled.div<MenuItemStyledProps>(
 
         '&:focus-visible': {
           outline: '2px solid transparent',
-          boxShadow: `inset 0 0 0 2px ${ownerColorScheme?.focusRingColor ?? palette?.primary?.main ?? '#1976d2'}`,
+          boxShadow: `inset 0 0 0 ${pxToRem(2)} ${ownerColorScheme?.focusRingColor ?? palette?.primary?.main ?? '#1976d2'}`,
         },
       }),
 

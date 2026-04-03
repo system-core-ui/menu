@@ -1,6 +1,7 @@
 import { type CSSObject, useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 import type { ThemeSchema } from '@thanh-libs/theme';
+import { pxToRem } from '@thanh-libs/utils';
 import type { MenuColorScheme } from '../models';
 
 interface MenuDividerStyledProps {
@@ -13,7 +14,7 @@ export const MenuDividerStyled = styled.hr<MenuDividerStyledProps>(
 
     return {
       border: 'none',
-      borderTop: `1px solid ${ownerColorScheme?.dividerColor ?? palette?.divider ?? 'rgba(0,0,0,0.12)'}`,
+      borderTop: `${pxToRem(1)} solid ${ownerColorScheme?.dividerColor ?? palette?.divider ?? 'rgba(0,0,0,0.12)'}`,
       margin: `${spacing?.tiny ?? '0.25rem'} 0`,
     };
   },

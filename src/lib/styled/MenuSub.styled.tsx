@@ -1,6 +1,7 @@
 import { type CSSObject, useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 import type { ThemeSchema } from '@thanh-libs/theme';
+import { pxToRem } from '@thanh-libs/utils';
 import type { MenuColorScheme } from '../models';
 import {
   FONT_SIZE_SUB_ARROW,
@@ -54,7 +55,7 @@ export const InlineSubContentStyled = styled.div<InlineSubContentStyledProps>(
             width: 6,
             height: 6,
             borderRadius: '50%',
-            border: `1.5px solid ${ownerColorScheme?.dotColor ?? palette?.text?.secondary ?? 'rgba(0,0,0,0.4)'}`,
+            border: `${pxToRem(1.5)} solid ${ownerColorScheme?.dotColor ?? palette?.text?.secondary ?? 'rgba(0,0,0,0.4)'}`,
             backgroundColor: 'transparent',
             marginRight: spacing?.small ?? '0.5rem',
             flexShrink: 0,
@@ -91,7 +92,7 @@ export const PopoverSubContentStyled = styled.div<PopoverSubContentStyledProps>(
       backgroundColor: ownerColorScheme?.popoverBg ?? palette?.background?.paper ?? '#fff',
       borderRadius: BORDER_RADIUS,
       boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
-      border: `1px solid ${ownerColorScheme?.popoverBorderColor ?? palette?.divider ?? 'rgba(0,0,0,0.12)'}`,
+      border: `${pxToRem(1)} solid ${ownerColorScheme?.popoverBorderColor ?? palette?.divider ?? 'rgba(0,0,0,0.12)'}`,
       padding: `${spacing?.tiny ?? '0.25rem'} 0`,
       zIndex: POPOVER_Z_INDEX,
       display: 'flex',

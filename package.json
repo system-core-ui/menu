@@ -35,6 +35,7 @@
     "@floating-ui/react": ">=0.27.0",
     "@thanh-libs/dialog": "*",
     "@thanh-libs/theme": "*",
+    "@thanh-libs/utils": "*",
     "react": ">=18",
     "react-dom": ">=18"
   },
@@ -62,8 +63,5 @@
       "prerelease": "node check-deps.mjs && yarn vitest run --passWithNoTests",
       "postbump": "yarn vite build"
     }
-  },
-  "dependencies": {
-    "@thanh-libs/utils": "^0.0.8"
   }
 }
